@@ -1,0 +1,5 @@
+name = "drone-security-kb"
+compatibility_date = "2025-12-23"
+
+[assets]
+directory = "."
