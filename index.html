@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drone Security Knowledge Base | OWASP Drone Top 10</title>
-    <meta name="description" content="Comprehensive drone security knowledge base covering vulnerabilities, CVEs, attack vectors, and defense strategies for UAV systems.">
+    <title>DroneSecKB | UAV Cybersecurity Knowledge Base</title>
+    <meta name="description" content="Comprehensive UAV cybersecurity knowledge base - OWASP Drone Top 10, CVE database, attack vectors, and defense strategies. Updated December 2025.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,400;9..144,600&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -15,804 +15,769 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --bg-dark: #0a0e17;
-            --bg-card: #111827;
-            --bg-card-hover: #1a2332;
-            --accent-cyan: #00f5d4;
-            --accent-red: #ff4757;
-            --accent-orange: #ffa502;
-            --accent-purple: #a855f7;
-            --text-primary: #f1f5f9;
+            --bg-primary: #07090d;
+            --bg-secondary: #0c1017;
+            --bg-tertiary: #111820;
+            --bg-elevated: #161d28;
+            --accent-primary: #22d3ee;
+            --accent-secondary: #f472b6;
+            --accent-warning: #fbbf24;
+            --accent-danger: #ef4444;
+            --accent-success: #10b981;
+            --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
-            --border-color: #1e293b;
+            --text-muted: #64748b;
+            --border-subtle: rgba(148, 163, 184, 0.1);
+            --border-default: rgba(148, 163, 184, 0.15);
         }
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        html {
-            scroll-behavior: smooth;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
         
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg-dark);
+            font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
             overflow-x: hidden;
         }
         
-        code, .mono {
-            font-family: 'JetBrains Mono', monospace;
+        .font-mono { font-family: 'Space Mono', monospace; }
+        .font-serif { font-family: 'Fraunces', Georgia, serif; }
+        
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
         }
         
-        ::-webkit-scrollbar-track {
-            background: var(--bg-dark);
+        @keyframes pulse-ring {
+            0% { transform: scale(0.8); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
         }
         
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(1deg); }
         }
         
-        ::-webkit-scrollbar-thumb:hover {
-            background: #475569;
-        }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-slide-in { animation: slideIn 0.4s ease-out forwards; }
+        .animate-float { animation: float 4s ease-in-out infinite; }
         
-        /* Animations */
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
-        @keyframes pulse-glow {
-            0%, 100% {
-                box-shadow: 0 0 20px rgba(0, 245, 212, 0.3);
-            }
-            50% {
-                box-shadow: 0 0 40px rgba(0, 245, 212, 0.5);
-            }
-        }
-        
-        @keyframes scanner {
-            0% {
-                transform: translateY(-100%);
-            }
-            100% {
-                transform: translateY(100%);
-            }
-        }
-        
-        .animate-fade-in {
-            animation: fadeInUp 0.6s ease-out forwards;
-        }
-        
-        .animate-delay-1 { animation-delay: 0.1s; }
-        .animate-delay-2 { animation-delay: 0.2s; }
-        .animate-delay-3 { animation-delay: 0.3s; }
-        .animate-delay-4 { animation-delay: 0.4s; }
-        
-        /* Gradient text */
-        .gradient-text {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+        .text-gradient {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         
-        /* Grid background */
-        .grid-bg {
-            background-image: 
-                linear-gradient(rgba(0, 245, 212, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 245, 212, 0.03) 1px, transparent 1px);
-            background-size: 50px 50px;
+        .glass {
+            background: rgba(12, 16, 23, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-subtle);
         }
         
-        /* Card styles */
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-default);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         
         .card:hover {
-            background: var(--bg-card-hover);
-            border-color: var(--accent-cyan);
+            background: var(--bg-tertiary);
+            border-color: rgba(34, 211, 238, 0.3);
             transform: translateY(-2px);
         }
         
-        /* Severity badges */
-        .severity-critical { background: linear-gradient(135deg, #dc2626, #b91c1c); }
-        .severity-high { background: linear-gradient(135deg, #ea580c, #c2410c); }
-        .severity-medium { background: linear-gradient(135deg, #ca8a04, #a16207); }
-        .severity-low { background: linear-gradient(135deg, #16a34a, #15803d); }
+        .card-interactive { cursor: pointer; }
+        .card-interactive:hover { box-shadow: 0 8px 30px rgba(34, 211, 238, 0.1); }
         
-        /* Navigation */
-        .nav-link {
-            position: relative;
-            transition: color 0.3s ease;
+        .severity-critical { background: linear-gradient(135deg, #dc2626, #991b1b); box-shadow: 0 0 20px rgba(220, 38, 38, 0.3); }
+        .severity-high { background: linear-gradient(135deg, #ea580c, #9a3412); box-shadow: 0 0 20px rgba(234, 88, 12, 0.3); }
+        .severity-medium { background: linear-gradient(135deg, #d97706, #92400e); box-shadow: 0 0 20px rgba(217, 119, 6, 0.3); }
+        .severity-low { background: linear-gradient(135deg, #16a34a, #166534); box-shadow: 0 0 20px rgba(22, 163, 74, 0.3); }
+        
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1;
+            vertical-align: middle;
         }
         
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: var(--accent-cyan);
-            transition: width 0.3s ease;
-        }
+        .badge-outline { background: transparent; border: 1px solid currentColor; }
         
-        .nav-link:hover::after,
-        .nav-link.active::after {
-            width: 100%;
-        }
-        
-        /* Terminal style */
         .terminal {
             background: #0d1117;
             border: 1px solid #30363d;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
+            border-radius: 10px;
+            overflow: hidden;
+            font-family: 'Space Mono', monospace;
         }
         
         .terminal-header {
-            background: #161b22;
-            padding: 8px 12px;
-            border-bottom: 1px solid #30363d;
-            display: flex;
-            gap: 6px;
-        }
-        
-        .terminal-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-        }
-        
-        /* Status indicator */
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
-        /* Table styles */
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .data-table th {
-            background: rgba(0, 245, 212, 0.1);
-            padding: 12px 16px;
-            text-align: left;
-            font-weight: 600;
-            border-bottom: 2px solid var(--accent-cyan);
-        }
-        
-        .data-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border-color);
-        }
-        
-        .data-table tr:hover td {
-            background: rgba(0, 245, 212, 0.05);
-        }
-        
-        /* Sidebar */
-        .sidebar-item {
+            background: linear-gradient(180deg, #21262d 0%, #161b22 100%);
             padding: 10px 16px;
-            border-left: 3px solid transparent;
-            transition: all 0.2s ease;
-            cursor: pointer;
-        }
-        
-        .sidebar-item:hover,
-        .sidebar-item.active {
-            background: rgba(0, 245, 212, 0.1);
-            border-left-color: var(--accent-cyan);
-        }
-        
-        /* Hero section */
-        .hero-gradient {
-            background: radial-gradient(ellipse at top, rgba(0, 245, 212, 0.15) 0%, transparent 50%),
-                        radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
-        }
-        
-        /* Drone animation */
-        .drone-icon {
-            animation: float 3s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        
-        /* Attack chain */
-        .attack-chain {
             display: flex;
             align-items: center;
             gap: 8px;
+            border-bottom: 1px solid #30363d;
         }
         
-        .attack-step {
-            padding: 8px 16px;
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 0.875rem;
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-content { padding: 16px 20px; font-size: 13px; line-height: 1.7; overflow-x: auto; }
+        .terminal-content .comment { color: #6e7681; }
+        .terminal-content .keyword { color: #ff7b72; }
+        .terminal-content .string { color: #a5d6ff; }
+        .terminal-content .function { color: #d2a8ff; }
+        .terminal-content .number { color: #79c0ff; }
+        .terminal-content .output { color: #7ee787; }
+        
+        .attack-node {
+            position: relative;
+            padding: 12px 20px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            transition: all 0.2s ease;
         }
         
-        .attack-arrow {
-            color: var(--accent-cyan);
+        .attack-node::after {
+            content: '→';
+            position: absolute;
+            right: -24px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-primary);
+            font-weight: bold;
         }
         
-        /* Risk matrix */
-        .risk-cell {
-            width: 60px;
-            height: 40px;
+        .attack-node:last-child::after { display: none; }
+        .attack-node:hover { border-color: var(--accent-primary); background: var(--bg-elevated); }
+        
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 0.75rem;
-            border-radius: 4px;
+            gap: 8px;
+            line-height: 1;
         }
         
-        /* Glitch effect */
-        .glitch {
-            position: relative;
-        }
-        
-        .glitch::before,
-        .glitch::after {
-            content: attr(data-text);
+        .tab-button::after {
+            content: '';
             position: absolute;
-            top: 0;
+            bottom: 0;
             left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-primary);
+            transform: scaleX(0);
+            transition: transform 0.2s ease;
+        }
+        
+        .tab-button:hover { color: var(--text-primary); }
+        .tab-button.active { color: var(--accent-primary); }
+        .tab-button.active::after { transform: scaleX(1); }
+        
+        .data-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+        .data-table th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-default);
+        }
+        .data-table th:first-child { border-radius: 8px 0 0 0; }
+        .data-table th:last-child { border-radius: 0 8px 0 0; }
+        .data-table td { padding: 14px 16px; border-bottom: 1px solid var(--border-subtle); font-size: 14px; }
+        .data-table tr:hover td { background: var(--bg-tertiary); }
+        
+        .stat-value { font-size: 48px; font-weight: 800; line-height: 1; letter-spacing: -2px; }
+        
+        .pulse-indicator { position: relative; width: 10px; height: 10px; }
+        .pulse-indicator::before { content: ''; position: absolute; inset: 0; background: currentColor; border-radius: 50%; }
+        .pulse-indicator::after { content: ''; position: absolute; inset: -4px; border: 2px solid currentColor; border-radius: 50%; animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+        
+        .hero-bg { position: relative; overflow: hidden; }
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 30%, rgba(34, 211, 238, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(244, 114, 182, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .grid-pattern {
+            background-image: 
+                linear-gradient(rgba(148, 163, 184, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(148, 163, 184, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        
+        .filter-chip {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .filter-chip:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .filter-chip.active { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--bg-primary); }
+        
+        .search-input {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-default);
+            border-radius: 8px;
+            padding: 10px 16px 10px 40px;
+            color: var(--text-primary);
+            font-size: 14px;
             width: 100%;
-            height: 100%;
+            transition: all 0.2s ease;
         }
-        
-        .glitch::before {
-            animation: glitch-1 0.3s infinite linear alternate-reverse;
-            color: var(--accent-cyan);
-            z-index: -1;
-        }
-        
-        .glitch::after {
-            animation: glitch-2 0.3s infinite linear alternate-reverse;
-            color: var(--accent-red);
-            z-index: -2;
-        }
-        
-        @keyframes glitch-1 {
-            0% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 2px); }
-            100% { clip-path: inset(10% 0 70% 0); transform: translate(2px, -2px); }
-        }
-        
-        @keyframes glitch-2 {
-            0% { clip-path: inset(60% 0 20% 0); transform: translate(2px, -2px); }
-            100% { clip-path: inset(70% 0 10% 0); transform: translate(-2px, 2px); }
-        }
+        .search-input:focus { outline: none; border-color: var(--accent-primary); box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.1); }
+        .search-input::placeholder { color: var(--text-muted); }
     </style>
 </head>
 <body>
     <div id="root"></div>
     
     <script type="text/babel">
-        const { useState, useEffect, useRef } = React;
+        const { useState, useEffect, useRef, useMemo } = React;
         
-        // ==================== DATA ====================
+        const Icon = ({ name, size = 20, className = "" }) => {
+            const ref = useRef(null);
+            useEffect(() => {
+                if (ref.current && lucide.icons[name]) {
+                    ref.current.innerHTML = "";
+                    const icon = lucide.createElement(lucide.icons[name]);
+                    icon.setAttribute('width', size);
+                    icon.setAttribute('height', size);
+                    icon.style.display = 'block';
+                    ref.current.appendChild(icon);
+                }
+            }, [name, size]);
+            return <span ref={ref} className={`inline-flex items-center justify-center flex-shrink-0 ${className}`} style={{ width: size, height: size }} />;
+        };
+        
+        const STATS = { totalCVEs: 16, activeThreats: 10, attackVectors: 18, lastUpdated: "December 2025" };
         
         const OWASP_DRONE_TOP_10 = [
             {
-                id: 1,
-                title: "Insecure Communication",
-                severity: "critical",
-                description: "Transmission of data over unsecured channels, allowing interception or modification of sensitive information including video feeds and control commands.",
-                impact: "Complete loss of drone control, data interception, mission compromise",
-                realWorld: "MAVLink protocol transmits unencrypted messages by default between UAVs and Ground Control Stations",
-                mitigations: [
-                    "Implement end-to-end encryption (TLS/DTLS)",
-                    "Use MAVLink 2.0 with message signing",
-                    "Enable ChaCha20 or AES-CTR encryption",
-                    "Secure all telemetry channels"
-                ],
-                cves: ["CVE-2023-6951", "CVE-2023-6948"],
-                attackVectors: ["Eavesdropping", "MITM", "Packet Injection"]
+                id: "D01", title: "Insecure Communication", severity: "critical", cvss: 9.1,
+                description: "Transmission of data over unsecured channels allowing interception or modification of video feeds, telemetry, and control commands.",
+                impact: "Complete loss of drone control, mission data interception, command injection",
+                protocol: "MAVLink",
+                realExample: "MAVLink protocol transmits unencrypted messages by default. DJI DroneID broadcasts unencrypted pilot location (NDSS 2023).",
+                mitigations: ["MAVLink 2.0 signing", "ChaCha20/AES-256 encryption", "DTLS tunneling", "OcuSync encrypted links"],
+                attackVectors: ["Eavesdropping", "MITM", "Packet Injection", "Replay"],
+                references: ["CVE-2023-6951", "NDSS 2023 DroneID Research"]
             },
             {
-                id: 2,
-                title: "Weak Authentication/Authorization",
-                severity: "critical",
-                description: "Inadequate authentication mechanisms allowing unauthorized access to drone controls or sensitive data. Many drones use default credentials or no authentication at all.",
-                impact: "Drone hijacking, unauthorized control, data theft",
-                realWorld: "Holy Stone Remote ID Module (CVE-2024-52876) allows unauthenticated remote power off via Bluetooth GATT",
-                mitigations: [
-                    "Implement strong multi-factor authentication",
-                    "Change default passwords immediately",
-                    "Use role-based access control (RBAC)",
-                    "Implement device pairing with secure key exchange"
-                ],
-                cves: ["CVE-2024-52876", "CVE-2024-6422"],
-                attackVectors: ["Credential Stuffing", "Default Credentials", "Brute Force"]
+                id: "D02", title: "Weak Authentication", severity: "critical", cvss: 9.8,
+                description: "Inadequate authentication mechanisms allowing unauthorized access to drone controls. Many drones use default credentials or no authentication.",
+                impact: "Drone hijacking, unauthorized control, complete system compromise",
+                protocol: "WiFi/Bluetooth/Telnet",
+                realExample: "CVE-2024-6422: Consumer UAV exposes unauthenticated Telnet with root access. Holy Stone Remote ID allows unauthenticated power-off (CVE-2024-52876).",
+                mitigations: ["WPA3-SAE encryption", "Certificate-based auth", "X25519 key exchange", "Disable default services"],
+                attackVectors: ["Default Credentials", "Brute Force", "Session Hijacking"],
+                references: ["CVE-2024-52876", "CVE-2024-6422"]
             },
             {
-                id: 3,
-                title: "Insecure Firmware/Software",
-                severity: "high",
-                description: "Vulnerabilities in drone firmware or software that can be exploited to gain unauthorized access or control. Includes lack of secure boot and unsigned updates.",
-                impact: "Persistent backdoors, complete system compromise, malware injection",
-                realWorld: "DJI Mavic 3 vulnerabilities (CVE-2023-51454 to CVE-2023-51456) allow code execution through vtwo_sdk service",
-                mitigations: [
-                    "Implement secure boot chain",
-                    "Sign all firmware updates cryptographically",
-                    "Enable rollback protection",
-                    "Regular security audits and updates"
-                ],
-                cves: ["CVE-2023-51454", "CVE-2023-51455", "CVE-2023-51456"],
-                attackVectors: ["Firmware Tampering", "Malicious Updates", "Downgrade Attacks"]
+                id: "D03", title: "Insecure Firmware", severity: "high", cvss: 8.4,
+                description: "Vulnerabilities in firmware including memory corruption, unsigned updates, and debug interfaces that enable persistent compromise.",
+                impact: "Code execution, persistent backdoors, firmware tampering, key extraction",
+                protocol: "JTAG/SWD/ADB",
+                realExample: "DJI Mavic 3 CVE-2023-51454/55/56: Memory corruption in vtwo_sdk service. 16 vulnerabilities found via DUML protocol fuzzing (NDSS 2023).",
+                mitigations: ["Secure boot chain", "Signed firmware updates", "Disable debug ports", "Rollback protection"],
+                attackVectors: ["Firmware Extraction", "Downgrade Attack", "Buffer Overflow", "EMFI"],
+                references: ["CVE-2023-51454", "CVE-2023-51455", "CVE-2023-51456"]
             },
             {
-                id: 4,
-                title: "GPS Spoofing",
-                severity: "high",
-                description: "Manipulation of GPS signals to mislead drone navigation, causing it to deviate from intended flight paths or land in unauthorized locations.",
-                impact: "Drone capture, mission failure, collision risks, delivery to attacker",
-                realWorld: "University of Texas demonstrated GPS spoofing to capture a civilian drone in flight",
-                mitigations: [
-                    "Multi-constellation GNSS (GPS + GLONASS + Galileo)",
-                    "IMU-based anomaly detection",
-                    "Implement cooperative localization",
-                    "Use visual positioning as backup"
-                ],
-                cves: [],
-                attackVectors: ["Signal Spoofing", "Meaconing", "Time-delay Attacks"]
+                id: "D04", title: "GPS Spoofing", severity: "high", cvss: 8.1,
+                description: "Manipulation of GPS signals to mislead drone navigation. Civil GPS signals are unencrypted at -130 dBm, easily overpowered.",
+                impact: "Drone capture, mission failure, geofence bypass, delivery theft",
+                protocol: "GPS L1/L5",
+                realExample: "University of Texas demonstrated GPS spoofing to capture civilian drone. DJI remains vulnerable despite security investments.",
+                mitigations: ["Multi-GNSS (GPS+GLONASS+Galileo)", "IMU cross-verification", "Visual odometry backup", "Galileo OSNMA"],
+                attackVectors: ["Signal Spoofing", "Meaconing", "Time-delay", "Jamming"],
+                references: ["IEEE 2018 Research", "DJI Security Assessment 2025"]
             },
             {
-                id: 5,
-                title: "Insufficient Network Security",
-                severity: "high",
-                description: "Vulnerabilities in drone network services including open Wi-Fi, exposed Telnet/FTP/SSH ports, and weak encryption allowing unauthorized network access.",
-                impact: "Root shell access, file system access, complete drone compromise",
-                realWorld: "Parrot AR.Drone exposes Telnet with root access and FTP without authentication at 192.168.1.1",
-                mitigations: [
-                    "Disable unnecessary services (Telnet, FTP)",
-                    "Use WPA3 encryption for Wi-Fi",
-                    "Enable 802.11w Management Frame Protection",
-                    "Implement network segmentation"
-                ],
-                cves: ["CVE-2024-6422"],
-                attackVectors: ["Port Scanning", "Deauthentication", "Evil Twin"]
+                id: "D05", title: "Network Exposure", severity: "high", cvss: 7.5,
+                description: "Dangerous services exposed including open WiFi APs, Telnet on port 23, FTP on port 21, and ADB on port 5555.",
+                impact: "Root shell access, file exfiltration, service disruption",
+                protocol: "TCP/IP",
+                realExample: "Parrot AR.Drone: Open WiFi + anonymous FTP + root Telnet. DJI exposes unauthenticated HTTP API for media download.",
+                mitigations: ["Disable Telnet/FTP", "802.11w MFP", "Network segmentation", "Firewall rules"],
+                attackVectors: ["Port Scanning", "Deauthentication", "Evil Twin", "ARP Poisoning"],
+                references: ["D3S Research 2024", "CVE-2024-6422"]
             },
             {
-                id: 6,
-                title: "Inadequate Data Protection",
-                severity: "medium",
-                description: "Drones collecting personal data without proper safeguards. Sensitive mission data, video feeds, and telemetry exposed to unauthorized access.",
-                impact: "Privacy violations, corporate espionage, regulatory penalties",
-                realWorld: "DJI HTTP server exposes unauthenticated API allowing download of photos and videos",
-                mitigations: [
-                    "Encrypt stored data at rest (LUKS, gocryptfs)",
-                    "Store sensitive data in RAM only",
-                    "Implement secure data wiping",
-                    "GDPR/privacy compliance measures"
-                ],
-                cves: [],
-                attackVectors: ["Data Exfiltration", "Storage Access", "Memory Dumping"]
+                id: "D06", title: "Data Protection Gaps", severity: "medium", cvss: 6.5,
+                description: "Sensitive data including flight logs, captured media, and pilot location stored or transmitted without proper protection.",
+                impact: "Privacy violations, corporate espionage, pilot tracking",
+                protocol: "Storage/API",
+                realExample: "DJI HTTP server exposes unauthenticated API for media download. DroneID broadcasts unencrypted pilot GPS coordinates.",
+                mitigations: ["AES-256 at rest", "Secure data wipe", "Local Data Mode", "Encrypted flight logs"],
+                attackVectors: ["Data Exfiltration", "Storage Access", "API Abuse"],
+                references: ["Nozomi Networks Research", "DroneID Disclosure"]
             },
             {
-                id: 7,
-                title: "Lack of Secure Update Mechanism",
-                severity: "medium",
-                description: "Insecure update processes that could introduce malware or unauthorized modifications. Lack of integrity verification for firmware packages.",
-                impact: "Malware injection, persistent compromise, supply chain attacks",
-                realWorld: "Some consumer drones accept unsigned firmware updates allowing arbitrary code execution",
-                mitigations: [
-                    "Cryptographic signature verification",
-                    "Secure boot chain validation",
-                    "Rollback protection mechanisms",
-                    "Encrypted firmware packages"
-                ],
-                cves: [],
-                attackVectors: ["Malicious Updates", "Downgrade Attacks", "MITM on Updates"]
+                id: "D07", title: "Insecure Updates", severity: "medium", cvss: 6.8,
+                description: "Firmware update mechanisms that lack integrity verification, enabling malicious updates or downgrade attacks.",
+                impact: "Malware injection, persistent backdoors, version rollback",
+                protocol: "OTA/USB",
+                realExample: "Some consumer drones accept unsigned firmware. DJI disputed 2 vulnerabilities without patches.",
+                mitigations: ["RSA-PSS signatures", "Secure version counters", "Encrypted OTA", "Certificate pinning"],
+                attackVectors: ["Malicious Updates", "Downgrade", "MITM on Update"],
+                references: ["Alias Robotics Research"]
             },
             {
-                id: 8,
-                title: "Insecure Third-party Components",
-                severity: "medium",
-                description: "Use of vulnerable third-party libraries, modules, and components that can compromise overall drone security.",
-                impact: "Inherited vulnerabilities, supply chain compromise",
-                realWorld: "BusyBox vulnerabilities in drone firmware, outdated OpenSSL libraries",
-                mitigations: [
-                    "Software Bill of Materials (SBOM)",
-                    "Regular dependency updates",
-                    "Vulnerability scanning",
-                    "Component vetting process"
-                ],
-                cves: [],
-                attackVectors: ["Dependency Exploits", "Library Vulnerabilities"]
+                id: "D08", title: "Component Risks", severity: "medium", cvss: 6.2,
+                description: "Third-party libraries and components with known vulnerabilities embedded in drone firmware.",
+                impact: "Inherited CVEs, supply chain compromise, dependency exploits",
+                protocol: "Various",
+                realExample: "BusyBox 1.25.1 FTP path traversal in DJI. Outdated OpenSSL libraries with known vulnerabilities.",
+                mitigations: ["SBOM maintenance", "Dependency scanning", "Regular updates", "Component vetting"],
+                attackVectors: ["Library Exploits", "Supply Chain", "Dependency Confusion"],
+                references: ["Alias Robotics CVE Database"]
             },
             {
-                id: 9,
-                title: "Physical Security Weaknesses",
-                severity: "medium",
-                description: "Physical tampering vulnerabilities including unsecured debug ports, exposed hardware, and lack of tamper detection.",
-                impact: "Hardware modification, key extraction, persistent backdoors",
-                realWorld: "JTAG/SWD debug ports exposed on flight controllers enable firmware extraction",
-                mitigations: [
-                    "Tamper detection mechanisms",
-                    "Disable debug interfaces in production",
-                    "Secure hardware design",
-                    "Physical access controls"
-                ],
-                cves: [],
-                attackVectors: ["Debug Port Access", "Hardware Tampering", "Side-channel"]
+                id: "D09", title: "Physical Security", severity: "medium", cvss: 5.9,
+                description: "Physical attack vectors including exposed debug ports, lack of tamper detection, and side-channel vulnerabilities.",
+                impact: "Hardware modification, key extraction, EMFI attacks",
+                protocol: "JTAG/SWD/I2C",
+                realExample: "IOActive demonstrated EMFI attack on DJI Mavic Pro achieving code execution through electromagnetic fault injection (2023).",
+                mitigations: ["Disable debug in production", "Tamper detection", "Secure enclave", "Anti-glitching"],
+                attackVectors: ["JTAG/SWD", "EMFI", "Side-channel", "Hardware Tampering"],
+                references: ["IOActive 2023 Whitepaper"]
             },
             {
-                id: 10,
-                title: "Insufficient Logging & Monitoring",
-                severity: "low",
-                description: "Lack of adequate logging and monitoring capabilities making it difficult to detect security breaches or operational anomalies.",
-                impact: "Undetected attacks, delayed incident response, forensic challenges",
-                realWorld: "Many consumer drones lack flight logs or security event logging",
-                mitigations: [
-                    "Implement comprehensive logging",
-                    "Anomaly detection systems",
-                    "Secure log storage",
-                    "Real-time alerting"
-                ],
-                cves: [],
-                attackVectors: ["Stealth Attacks", "Log Tampering"]
+                id: "D10", title: "Logging Deficits", severity: "low", cvss: 4.3,
+                description: "Insufficient logging and monitoring capabilities hindering security breach detection and forensic investigation.",
+                impact: "Undetected attacks, delayed response, forensic gaps",
+                protocol: "Logging",
+                realExample: "Many consumer drones lack security event logging. Flight logs often stored unencrypted.",
+                mitigations: ["Comprehensive logging", "Anomaly detection", "Secure log storage", "Tamper-evident logs"],
+                attackVectors: ["Log Tampering", "Stealth Attacks", "Anti-forensics"],
+                references: ["OWASP Drone Project"]
             }
         ];
         
         const CVE_DATABASE = [
             {
-                id: "CVE-2024-52876",
-                product: "Holy Stone Remote ID Module HSRID01",
-                severity: "high",
-                cvss: 7.5,
-                description: "Unauthenticated remote power off via ASTM Remote ID Bluetooth GATT read operations",
-                discovered: "2024-11-17",
-                status: "Patched",
-                references: ["https://coalfire.com/the-coalfire-blog/holy-stone-remote-id-vulnerability-disclosure"]
+                id: "CVE-2024-52876", product: "Holy Stone Remote ID Module HSRID01", vendor: "Holy Stone",
+                severity: "high", cvss: 7.5, cvssVector: "CVSS:4.0/AV:A/AC:L/AT:N/PR:N/UI:N/VC:N/VI:N/VA:H",
+                type: "CWE-125: Out-of-bounds Read",
+                description: "Unauthenticated remote power off via ASTM Remote ID Bluetooth GATT multiple read operations causes buffer over-read and device shutdown.",
+                discovered: "2024-07-07", disclosed: "2024-11-17", status: "Patched",
+                exploitAvailable: true, exploitDifficulty: "Low", attackVector: "Bluetooth (adjacent network)",
+                impact: "Denial of Service - forces drone to land",
+                references: [
+                    { title: "Coalfire Disclosure", url: "https://coalfire.com/the-coalfire-blog/holy-stone-remote-id-vulnerability-disclosure" },
+                    { title: "NVD Entry", url: "https://nvd.nist.gov/vuln/detail/CVE-2024-52876" }
+                ]
             },
             {
-                id: "CVE-2024-6422",
-                product: "Consumer UAV (Multiple Models)",
-                severity: "critical",
-                cvss: 9.8,
-                description: "Unauthenticated Telnet access allows remote attackers to manipulate device, stop processes, read/delete/change data",
-                discovered: "2024-07-01",
-                status: "Vendor Notified",
-                references: ["https://nvd.nist.gov/vuln/detail/CVE-2024-6422"]
+                id: "CVE-2024-6422", product: "Consumer UAV (Multiple Models)", vendor: "Multiple",
+                severity: "critical", cvss: 9.8, cvssVector: "AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+                type: "CWE-306: Missing Authentication",
+                description: "Unauthenticated Telnet access allows remote attackers to gain root shell, stop processes, read/delete/change data, and shutdown drone mid-flight.",
+                discovered: "2024-07-01", disclosed: "2024-07-01", status: "Vendor Notified",
+                exploitAvailable: true, exploitDifficulty: "Very Low", attackVector: "Network (WiFi connection)",
+                impact: "Complete system compromise, RCE",
+                references: [
+                    { title: "NVD Entry", url: "https://nvd.nist.gov/vuln/detail/CVE-2024-6422" },
+                    { title: "D3S Research", url: "https://www.mdpi.com/2078-2489/15/12/811" }
+                ]
             },
             {
-                id: "CVE-2023-6951",
-                product: "DJI Mavic 3 Series",
-                severity: "medium",
-                cvss: 6.6,
-                description: "Weak WiFi password generation in QuickTransfer Mode allows unauthorized network connection",
-                discovered: "2024-04-04",
-                status: "Patched",
-                references: ["https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis"]
+                id: "CVE-2023-6951", product: "DJI Mavic 3 Series (QuickTransfer Mode)", vendor: "DJI",
+                severity: "medium", cvss: 6.6, cvssVector: "AV:A/AC:L/PR:N/UI:R/S:C/C:H/I:N/A:N",
+                type: "CWE-330: Insufficient Randomness",
+                description: "Weak WiFi password generation using libc random() called only 4 times produces 8-hex password crackable in ~2 hours with single GPU.",
+                discovered: "2024-04-04", disclosed: "2024-04-04", status: "Patched",
+                exploitAvailable: true, exploitDifficulty: "Medium", attackVector: "WiFi (adjacent network)",
+                impact: "Unauthorized network access, enables further attacks",
+                references: [{ title: "Nozomi Networks Research", url: "https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis" }]
             },
             {
-                id: "CVE-2023-6948",
-                product: "DJI Mavic 3 Series",
-                severity: "low",
-                cvss: 3.0,
-                description: "FTP service denial-of-service via malformed SIZE request",
-                discovered: "2024-04-04",
-                status: "Patched",
-                references: ["https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis"]
+                id: "CVE-2023-51454", product: "DJI Mavic 3 Series", vendor: "DJI",
+                severity: "medium", cvss: 6.8, cvssVector: "AV:A/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H",
+                type: "CWE-787: Out-of-bounds Write",
+                description: "Memory corruption in vtwo_sdk service via custom TLV protocol over TCP. Discovered through fuzzing campaign on Android emulator.",
+                discovered: "2024-04-04", disclosed: "2024-04-04", status: "Patched",
+                exploitAvailable: false, exploitDifficulty: "High", attackVector: "Network (QuickTransfer WiFi)",
+                impact: "Potential code execution",
+                references: [{ title: "Nozomi Networks Research", url: "https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis" }]
             },
             {
-                id: "CVE-2023-51454",
-                product: "DJI Mavic 3 Series",
-                severity: "medium",
-                cvss: 6.8,
-                description: "Out-of-Bound Write in vtwo_sdk service potentially allowing code execution",
-                discovered: "2024-04-04",
-                status: "Patched",
-                references: ["https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis"]
+                id: "CVE-2023-51455", product: "DJI Mavic 3 Series", vendor: "DJI",
+                severity: "medium", cvss: 6.8, cvssVector: "AV:A/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H",
+                type: "CWE-787: Out-of-bounds Write",
+                description: "Out-of-bounds write vulnerability in TLV protocol handler within vtwo_sdk service.",
+                discovered: "2024-04-04", disclosed: "2024-04-04", status: "Patched",
+                exploitAvailable: false, exploitDifficulty: "High", attackVector: "Network (QuickTransfer WiFi)",
+                impact: "Potential code execution",
+                references: [{ title: "Nozomi Networks Research", url: "https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis" }]
             },
             {
-                id: "CVE-2023-51455",
-                product: "DJI Mavic 3 Series",
-                severity: "medium",
-                cvss: 6.8,
-                description: "Out-of-Bound Write vulnerability in TLV protocol handler",
-                discovered: "2024-04-04",
-                status: "Patched",
-                references: ["https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis"]
+                id: "CVE-2023-51456", product: "DJI Mavic 3 Series", vendor: "DJI",
+                severity: "medium", cvss: 6.8, cvssVector: "AV:A/AC:H/PR:L/UI:R/S:U/C:H/I:H/A:H",
+                type: "CWE-129: Improper Validation of Array Index",
+                description: "Array index out-of-bounds vulnerability in vtwo_sdk service via malformed TLV packets.",
+                discovered: "2024-04-04", disclosed: "2024-04-04", status: "Patched",
+                exploitAvailable: false, exploitDifficulty: "High", attackVector: "Network (QuickTransfer WiFi)",
+                impact: "Potential code execution",
+                references: [{ title: "Nozomi Networks Research", url: "https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis" }]
             },
             {
-                id: "CVE-2023-51456",
-                product: "DJI Mavic 3 Series",
-                severity: "medium",
-                cvss: 6.8,
-                description: "Array-Index-Out-Of-Bound vulnerability in vtwo_sdk",
-                discovered: "2024-04-04",
-                status: "Patched",
-                references: ["https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis"]
+                id: "NDSS-2023-DJI", product: "DJI Mini 2, Air 2, Mavic 2/3", vendor: "DJI",
+                severity: "high", cvss: 8.0, cvssVector: "Multiple vectors",
+                type: "Multiple (16 vulnerabilities)",
+                description: "DUML protocol fuzzing revealed 16 vulnerabilities including serial number modification, tracking mechanism bypass, and remote crash. DroneID reverse engineering exposed unencrypted pilot location.",
+                discovered: "2023-02-27", disclosed: "2023-03-03", status: "Patched",
+                exploitAvailable: true, exploitDifficulty: "Medium", attackVector: "Network + Radio",
+                impact: "Identity spoofing, tracking bypass, RCE, pilot location exposure",
+                references: [{ title: "NDSS 2023 Paper", url: "https://news.rub.de/english/press-releases/2023-03-02-it-security-security-vulnerabilities-detected-drones-made-dji" }]
+            },
+            {
+                id: "CVE-2023-6948", product: "DJI Mavic 3 Series", vendor: "DJI",
+                severity: "low", cvss: 3.0, cvssVector: "AV:A/AC:L/PR:L/UI:R/S:U/C:N/I:N/A:L",
+                type: "CWE-754: Improper Check for Exceptional Conditions",
+                description: "FTP service denial-of-service via malformed SIZE request triggers FORTIFY crash requiring drone reboot.",
+                discovered: "2024-04-04", disclosed: "2024-04-04", status: "Disputed",
+                exploitAvailable: true, exploitDifficulty: "Low", attackVector: "Network (FTP)",
+                impact: "Denial of Service",
+                references: [{ title: "Nozomi Networks Research", url: "https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis" }]
             }
         ];
         
         const ATTACK_VECTORS = [
             {
-                category: "Communication Attacks",
+                category: "Communication Attacks", icon: "Wifi", color: "#22d3ee",
                 attacks: [
-                    { name: "WiFi Deauthentication", description: "Send forged deauth packets to disconnect controller", tools: ["Aircrack-ng", "ESP8266 Deauther"], difficulty: "Easy" },
-                    { name: "MAVLink Injection", description: "Inject malicious commands via unencrypted protocol", tools: ["Scapy", "pymavlink"], difficulty: "Medium" },
-                    { name: "Replay Attack", description: "Capture and replay control commands", tools: ["Wireshark", "SDR"], difficulty: "Medium" },
-                    { name: "Man-in-the-Middle", description: "Intercept and modify communications", tools: ["Bettercap", "mitmproxy"], difficulty: "Medium" }
+                    { name: "WiFi Deauthentication", desc: "802.11 deauth packets disconnect legitimate controller", tools: ["Aircrack-ng", "ESP8266"], difficulty: "Easy", mitre: "T1498" },
+                    { name: "MAVLink Injection", desc: "Inject malicious commands via unencrypted protocol", tools: ["pymavlink", "Scapy"], difficulty: "Medium", mitre: "T1071" },
+                    { name: "Replay Attack", desc: "Capture and replay valid control commands", tools: ["SDR", "Wireshark"], difficulty: "Medium", mitre: "T1090" },
+                    { name: "MITM Interception", desc: "Position between drone and controller", tools: ["Bettercap", "mitmproxy"], difficulty: "Medium", mitre: "T1557" },
+                    { name: "DroneID Tracking", desc: "Decode unencrypted DroneID broadcasts", tools: ["SDR", "Custom decoder"], difficulty: "Medium", mitre: "T1040" }
                 ]
             },
             {
-                category: "GPS/Navigation Attacks",
+                category: "GPS/Navigation", icon: "MapPin", color: "#f472b6",
                 attacks: [
-                    { name: "GPS Spoofing", description: "Transmit fake GPS signals to mislead navigation", tools: ["HackRF", "GPS-SDR-SIM"], difficulty: "Hard" },
-                    { name: "GPS Jamming", description: "Overwhelm GPS receiver with noise", tools: ["SDR", "Signal Generator"], difficulty: "Medium" },
-                    { name: "IMU Spoofing", description: "Inject false sensor data via acoustic/magnetic means", tools: ["Ultrasonic emitters"], difficulty: "Hard" }
+                    { name: "GPS Spoofing", desc: "Transmit fake GPS signals to control navigation", tools: ["HackRF", "GPS-SDR-SIM"], difficulty: "Hard", mitre: "T1200" },
+                    { name: "GPS Jamming", desc: "Overwhelm GPS receiver with RF noise", tools: ["SDR", "Signal Gen"], difficulty: "Medium", mitre: "T1498" },
+                    { name: "Geofence Bypass", desc: "Spoof location to bypass no-fly zones", tools: ["GPS Spoofer"], difficulty: "Hard", mitre: "T1562" },
+                    { name: "IMU Manipulation", desc: "Acoustic/magnetic injection to sensors", tools: ["Ultrasonic"], difficulty: "Very Hard", mitre: "T1200" }
                 ]
             },
             {
-                category: "Network Attacks",
+                category: "Network Exploitation", icon: "Network", color: "#fbbf24",
                 attacks: [
-                    { name: "Telnet Root Access", description: "Connect to open Telnet for root shell", tools: ["Netcat", "PuTTY"], difficulty: "Easy" },
-                    { name: "FTP Data Theft", description: "Access files via anonymous FTP", tools: ["FileZilla", "wget"], difficulty: "Easy" },
-                    { name: "Port Scanning", description: "Enumerate open services on drone", tools: ["Nmap", "Masscan"], difficulty: "Easy" },
-                    { name: "DoS Flooding", description: "Overwhelm drone with packets", tools: ["hping3", "LOIC"], difficulty: "Easy" }
+                    { name: "Telnet Root Access", desc: "Connect to unauthenticated Telnet service", tools: ["nc", "telnet"], difficulty: "Very Easy", mitre: "T1021" },
+                    { name: "Anonymous FTP", desc: "Access filesystem via open FTP", tools: ["ftp", "wget"], difficulty: "Very Easy", mitre: "T1021" },
+                    { name: "ADB Shell", desc: "Android Debug Bridge exploitation", tools: ["adb"], difficulty: "Easy", mitre: "T1059" },
+                    { name: "HTTP API Abuse", desc: "Unauthenticated API for media exfiltration", tools: ["curl", "Python"], difficulty: "Easy", mitre: "T1190" },
+                    { name: "Port Scanning", desc: "Enumerate exposed services", tools: ["Nmap", "Masscan"], difficulty: "Very Easy", mitre: "T1046" }
                 ]
             },
             {
-                category: "Firmware/Software Attacks",
+                category: "Firmware/Hardware", icon: "Cpu", color: "#10b981",
                 attacks: [
-                    { name: "Firmware Extraction", description: "Dump and analyze firmware binaries", tools: ["binwalk", "JTAG"], difficulty: "Hard" },
-                    { name: "Downgrade Attack", description: "Install older vulnerable firmware", tools: ["Custom flasher"], difficulty: "Medium" },
-                    { name: "Code Injection", description: "Exploit memory corruption bugs", tools: ["GDB", "Ghidra"], difficulty: "Hard" }
+                    { name: "Firmware Extraction", desc: "Dump firmware via JTAG/debug ports", tools: ["OpenOCD", "binwalk"], difficulty: "Hard", mitre: "T1542" },
+                    { name: "EMFI Attack", desc: "Electromagnetic fault injection for code exec", tools: ["ChipWhisperer"], difficulty: "Very Hard", mitre: "T1200" },
+                    { name: "Downgrade Attack", desc: "Install older vulnerable firmware", tools: ["Custom flasher"], difficulty: "Medium", mitre: "T1601" },
+                    { name: "DUML Fuzzing", desc: "Fuzz proprietary protocol for crashes", tools: ["Custom fuzzer"], difficulty: "Hard", mitre: "T1190" }
                 ]
             }
         ];
         
-        const TOOLS_RESOURCES = [
+        const TIMELINE = [
+            { year: "2017", event: "US Army grounds DJI fleet over security concerns", type: "incident" },
+            { year: "2017", event: "DJI launches Bug Bounty Program", type: "mitigation" },
+            { year: "2018", event: "GPS spoofing research captures civilian drones", type: "research" },
+            { year: "2022", event: "80,000+ DJI drone IDs exposed in data leak", type: "incident" },
+            { year: "2023", event: "NDSS: 16 DJI vulnerabilities, DroneID reversed", type: "research" },
+            { year: "2023", event: "IOActive demonstrates EMFI attack on Mavic Pro", type: "research" },
+            { year: "2024", event: "Nozomi finds 9 vulnerabilities in Mavic 3", type: "research" },
+            { year: "2024", event: "CVE-2024-52876: Holy Stone Remote ID DoS", type: "cve" },
+            { year: "2024", event: "D3S Drone Security Scoring System published", type: "framework" },
+            { year: "2025", event: "DJI releases comprehensive Security White Paper", type: "mitigation" },
+            { year: "2025", event: "DJI achieves ISO 27701 certification for FlightHub 2", type: "mitigation" }
+        ];
+        
+        const TOOLS = [
             {
-                category: "Offensive Security Tools",
+                category: "Offensive Tools", icon: "Crosshair",
                 items: [
-                    { name: "DroneSploit", url: "https://github.com/dhondta/dronesploit", description: "Metasploit-like framework for drone hacking" },
-                    { name: "Damn Vulnerable Drone", url: "https://github.com/nicholasaleks/Damn-Vulnerable-Drone", description: "Intentionally vulnerable drone simulation" },
-                    { name: "Dronehole", url: "https://github.com/aeracoop/dronehole", description: "Deauthentication attack tool for Parrot/DJI" },
-                    { name: "Aircrack-ng", url: "https://www.aircrack-ng.org/", description: "WiFi security auditing suite" }
+                    { name: "DroneSploit", url: "https://github.com/dhondta/dronesploit", desc: "Metasploit-like drone exploitation framework", stars: "1.2k" },
+                    { name: "Damn Vulnerable Drone", url: "https://github.com/nicholasaleks/Damn-Vulnerable-Drone", desc: "Practice vulnerable drone environment", stars: "800+" },
+                    { name: "Aircrack-ng", url: "https://www.aircrack-ng.org/", desc: "WiFi security auditing suite", stars: "4.8k" },
+                    { name: "GPS-SDR-SIM", url: "https://github.com/osqzss/gps-sdr-sim", desc: "GPS signal simulator for SDR", stars: "2.5k" }
                 ]
             },
             {
-                category: "Analysis & Research",
+                category: "Analysis & Research", icon: "Search",
                 items: [
-                    { name: "DJI Firmware Tools", url: "https://github.com/o-gs/dji-firmware-tools", description: "Tools for DJI firmware analysis" },
-                    { name: "pymavlink", url: "https://github.com/ArduPilot/pymavlink", description: "Python MAVLink library" },
-                    { name: "Wireshark", url: "https://www.wireshark.org/", description: "Network protocol analyzer with MAVLink support" },
-                    { name: "Binwalk", url: "https://github.com/ReFirmLabs/binwalk", description: "Firmware analysis tool" }
+                    { name: "DJI Firmware Tools", url: "https://github.com/o-gs/dji-firmware-tools", desc: "DJI firmware analysis utilities", stars: "1.5k" },
+                    { name: "pymavlink", url: "https://github.com/ArduPilot/pymavlink", desc: "Python MAVLink library", stars: "600+" },
+                    { name: "Binwalk", url: "https://github.com/ReFirmLabs/binwalk", desc: "Firmware analysis and extraction", stars: "10k+" },
+                    { name: "Wireshark", url: "https://www.wireshark.org/", desc: "Network protocol analyzer with MAVLink", stars: "N/A" }
                 ]
             },
             {
-                category: "Standards & Frameworks",
+                category: "Standards & Frameworks", icon: "Shield",
                 items: [
-                    { name: "OWASP Drone Top 10", url: "https://owasp.org/www-project-top-10-drone-security-risks/", description: "Official OWASP drone security risks" },
-                    { name: "OWASP Drone Cheat Sheet", url: "https://cheatsheetseries.owasp.org/cheatsheets/Drone_Security_Cheat_Sheet.html", description: "Security best practices" },
-                    { name: "NIST SP 800-193", url: "https://csrc.nist.gov/pubs/sp/800/193/final", description: "Platform Firmware Resiliency Guidelines" },
-                    { name: "ETSI EN 303 645", url: "https://www.etsi.org/technologies/consumer-iot-security", description: "Consumer IoT Security Standard" }
+                    { name: "OWASP Drone Top 10", url: "https://owasp.org/www-project-top-10-drone-security-risks/", desc: "Official drone security risk list", stars: "OWASP" },
+                    { name: "D3S Scoring System", url: "https://www.mdpi.com/2078-2489/15/12/811", desc: "Drone security assessment methodology", stars: "2024" },
+                    { name: "NIST SP 800-193", url: "https://csrc.nist.gov/pubs/sp/800/193/final", desc: "Platform firmware resiliency", stars: "NIST" },
+                    { name: "DJI Security White Paper", url: "https://www.dji.com/trust-center/resource/white-paper", desc: "Comprehensive DJI security documentation", stars: "2025" }
                 ]
             }
         ];
         
-        // ==================== COMPONENTS ====================
-        
-        const Icon = ({ name, size = 24, className = "" }) => {
-            const ref = useRef(null);
-            useEffect(() => {
-                if (ref.current) {
-                    ref.current.innerHTML = "";
-                    const icon = lucide.createElement(lucide.icons[name]);
-                    ref.current.appendChild(icon);
-                }
-            }, [name]);
-            return <span ref={ref} className={className} style={{ display: 'inline-flex', width: size, height: size }} />;
-        };
-        
-        const SeverityBadge = ({ severity }) => {
-            const colors = {
-                critical: "severity-critical",
-                high: "severity-high",
-                medium: "severity-medium",
-                low: "severity-low"
+        // Helper Components
+        const SeverityBadge = ({ severity, showLabel = true }) => {
+            const config = {
+                critical: { bg: "severity-critical", label: "Critical", icon: "AlertTriangle" },
+                high: { bg: "severity-high", label: "High", icon: "AlertCircle" },
+                medium: { bg: "severity-medium", label: "Medium", icon: "AlertCircle" },
+                low: { bg: "severity-low", label: "Low", icon: "Info" }
             };
+            const { bg, label, icon } = config[severity] || config.medium;
             return (
-                <span className={`${colors[severity]} px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider`}>
-                    {severity}
+                <span className={`badge ${bg} text-white`}>
+                    <Icon name={icon} size={12} />
+                    {showLabel && <span>{label}</span>}
                 </span>
             );
         };
         
+        const CVSSBadge = ({ score }) => {
+            const getColor = (s) => s >= 9 ? "#ef4444" : s >= 7 ? "#f97316" : s >= 4 ? "#eab308" : "#22c55e";
+            return <span className="font-mono font-bold text-sm" style={{ color: getColor(score) }}>{score.toFixed(1)}</span>;
+        };
+        
+        const StatusBadge = ({ status }) => {
+            const config = { "Patched": { color: "#10b981", icon: "CheckCircle" }, "Vendor Notified": { color: "#f59e0b", icon: "Clock" }, "Disputed": { color: "#6366f1", icon: "HelpCircle" } };
+            const { color, icon } = config[status] || { color: "#ef4444", icon: "XCircle" };
+            return (
+                <span className="badge badge-outline" style={{ color, borderColor: color }}>
+                    <Icon name={icon} size={12} />
+                    <span>{status}</span>
+                </span>
+            );
+        };
+        
+        const DifficultyBadge = ({ difficulty }) => {
+            const colors = { "Very Easy": "#10b981", "Easy": "#22c55e", "Medium": "#eab308", "Hard": "#f97316", "Very Hard": "#ef4444" };
+            return <span className="text-xs font-medium" style={{ color: colors[difficulty] || "#94a3b8" }}>{difficulty}</span>;
+        };
+        
+        // Navigation
         const Navigation = ({ activeSection, setActiveSection }) => {
             const navItems = [
-                { id: 'overview', label: 'Overview', icon: 'Home' },
-                { id: 'top10', label: 'Drone Top 10', icon: 'Shield' },
+                { id: 'dashboard', label: 'Dashboard', icon: 'LayoutDashboard' },
+                { id: 'risks', label: 'OWASP Top 10', icon: 'Shield' },
                 { id: 'cves', label: 'CVE Database', icon: 'Database' },
-                { id: 'attacks', label: 'Attack Vectors', icon: 'Crosshair' },
-                { id: 'tools', label: 'Tools & Resources', icon: 'Wrench' }
+                { id: 'attacks', label: 'Attack Matrix', icon: 'Crosshair' },
+                { id: 'tools', label: 'Resources', icon: 'Wrench' }
             ];
             
             return (
-                <nav className="fixed top-0 left-0 right-0 z-50 bg-[#0a0e17]/95 backdrop-blur-lg border-b border-[#1e293b]">
+                <nav className="glass fixed top-0 left-0 right-0 z-50">
                     <div className="max-w-7xl mx-auto px-6">
                         <div className="flex items-center justify-between h-16">
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00f5d4] to-[#a855f7] flex items-center justify-center">
-                                    <Icon name="Shield" size={20} className="text-[#0a0e17]" />
+                                <div className="relative">
+                                    <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-pink-400 flex items-center justify-center">
+                                        <Icon name="Shield" size={18} className="text-gray-900" />
+                                    </div>
+                                    <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-gray-900" />
                                 </div>
-                                <span className="font-bold text-lg">DroneSecKB</span>
+                                <div>
+                                    <span className="font-bold text-lg tracking-tight">DroneSecKB</span>
+                                    <span className="hidden sm:inline text-xs text-gray-500 ml-2 font-mono">v2.0</span>
+                                </div>
                             </div>
-                            
-                            <div className="flex items-center gap-8">
+                            <div className="hidden md:flex items-center gap-1">
                                 {navItems.map(item => (
-                                    <button
-                                        key={item.id}
-                                        onClick={() => setActiveSection(item.id)}
-                                        className={`nav-link flex items-center gap-2 text-sm font-medium transition-colors
-                                            ${activeSection === item.id ? 'text-[#00f5d4] active' : 'text-[#94a3b8] hover:text-white'}`}
-                                    >
+                                    <button key={item.id} onClick={() => setActiveSection(item.id)}
+                                        className={`tab-button flex items-center gap-2 ${activeSection === item.id ? 'active' : ''}`}>
                                         <Icon name={item.icon} size={16} />
-                                        {item.label}
+                                        <span>{item.label}</span>
                                     </button>
                                 ))}
                             </div>
-                            
-                            <a 
-                                href="https://github.com" 
-                                target="_blank" 
-                                rel="noopener"
-                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#111827] border border-[#1e293b] hover:border-[#00f5d4] transition-colors"
-                            >
-                                <Icon name="Github" size={18} />
-                                <span className="text-sm">GitHub</span>
-                            </a>
+                            <div className="flex items-center gap-3">
+                                <span className="hidden lg:flex items-center gap-2 text-xs text-gray-500">
+                                    <span className="pulse-indicator text-green-400" />
+                                    <span>Updated {STATS.lastUpdated}</span>
+                                </span>
+                                <a href="https://github.com" target="_blank" rel="noopener" className="p-2 rounded-lg bg-gray-800/50 hover:bg-gray-700/50 transition-colors flex items-center justify-center">
+                                    <Icon name="Github" size={18} />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </nav>
             );
         };
         
-        const HeroSection = () => (
-            <section className="hero-gradient pt-32 pb-20 px-6 grid-bg">
+        // Dashboard Section
+        const DashboardSection = ({ setActiveSection }) => (
+            <section className="hero-bg grid-pattern pt-24 pb-16 px-6">
                 <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center gap-16">
-                        <div className="flex-1">
-                            <div className="flex items-center gap-3 mb-6">
-                                <div className="status-dot bg-[#00f5d4]" />
-                                <span className="text-[#00f5d4] text-sm font-medium mono">LIVE DATABASE</span>
+                    <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
+                        <div className="animate-fade-in">
+                            <div className="flex items-center gap-2 mb-6">
+                                <span className="badge bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+                                    <Icon name="Zap" size={12} />
+                                    <span>Updated December 2025</span>
+                                </span>
                             </div>
-                            
-                            <h1 className="text-5xl font-extrabold mb-6 leading-tight">
-                                <span className="gradient-text">Drone Security</span>
-                                <br />Knowledge Base
+                            <h1 className="text-5xl lg:text-6xl font-bold leading-tight mb-6">
+                                <span className="text-gradient">UAV Security</span><br/>
+                                <span className="font-serif italic font-normal">Knowledge Base</span>
                             </h1>
-                            
-                            <p className="text-xl text-[#94a3b8] mb-8 max-w-xl">
-                                Comprehensive UAV cybersecurity resource covering vulnerabilities, CVEs, attack vectors, 
-                                and defense strategies. Your one-stop reference for drone security.
+                            <p className="text-xl text-gray-400 mb-8 max-w-lg">
+                                Comprehensive drone cybersecurity resource covering vulnerabilities, attack vectors, and defense strategies based on latest 2024-2025 research.
                             </p>
-                            
-                            <div className="flex items-center gap-4 mb-12">
-                                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#111827] border border-[#1e293b]">
-                                    <Icon name="Database" size={18} className="text-[#00f5d4]" />
-                                    <span className="text-sm"><strong>10</strong> Risk Categories</span>
-                                </div>
-                                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#111827] border border-[#1e293b]">
-                                    <Icon name="Bug" size={18} className="text-[#ff4757]" />
-                                    <span className="text-sm"><strong>7+</strong> CVEs Documented</span>
-                                </div>
-                                <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#111827] border border-[#1e293b]">
-                                    <Icon name="Crosshair" size={18} className="text-[#ffa502]" />
-                                    <span className="text-sm"><strong>15+</strong> Attack Vectors</span>
-                                </div>
-                            </div>
-                            
-                            <div className="terminal max-w-lg">
-                                <div className="terminal-header">
-                                    <div className="terminal-dot bg-[#ff5f57]" />
-                                    <div className="terminal-dot bg-[#febc2e]" />
-                                    <div className="terminal-dot bg-[#28c840]" />
-                                </div>
-                                <div className="p-4 text-sm">
-                                    <div className="text-[#6e7681]"># Recent research finding</div>
-                                    <div><span className="text-[#ff7b72]">CVE-2024-52876</span>: Holy Stone Remote ID</div>
-                                    <div className="text-[#94a3b8]">├─ Type: Unauthenticated Remote Power Off</div>
-                                    <div className="text-[#94a3b8]">├─ CVSS: <span className="text-[#ffa502]">7.5 HIGH</span></div>
-                                    <div className="text-[#94a3b8]">└─ Status: <span className="text-[#28c840]">Patched</span></div>
-                                </div>
+                            <div className="flex flex-wrap gap-3">
+                                <button onClick={() => setActiveSection('risks')} className="px-6 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-cyan-400 text-gray-900 font-semibold hover:opacity-90 transition-opacity flex items-center gap-2">
+                                    <Icon name="Shield" size={18} />
+                                    <span>Explore Risks</span>
+                                </button>
+                                <button onClick={() => setActiveSection('cves')} className="px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 transition-colors flex items-center gap-2">
+                                    <Icon name="Database" size={18} />
+                                    <span>View CVEs</span>
+                                </button>
                             </div>
                         </div>
-                        
-                        <div className="flex-1 flex justify-center">
-                            <div className="relative">
-                                <svg className="drone-icon" width="300" height="200" viewBox="0 0 300 200">
-                                    {/* Drone body */}
-                                    <ellipse cx="150" cy="100" rx="40" ry="20" fill="#1e293b" stroke="#00f5d4" strokeWidth="2"/>
-                                    
-                                    {/* Arms */}
-                                    <line x1="110" y1="100" x2="50" y2="60" stroke="#334155" strokeWidth="4"/>
-                                    <line x1="190" y1="100" x2="250" y2="60" stroke="#334155" strokeWidth="4"/>
-                                    <line x1="110" y1="100" x2="50" y2="140" stroke="#334155" strokeWidth="4"/>
-                                    <line x1="190" y1="100" x2="250" y2="140" stroke="#334155" strokeWidth="4"/>
-                                    
-                                    {/* Rotors */}
-                                    <circle cx="50" cy="60" r="25" fill="none" stroke="#00f5d4" strokeWidth="2" strokeDasharray="4 2">
-                                        <animateTransform attributeName="transform" type="rotate" from="0 50 60" to="360 50 60" dur="0.5s" repeatCount="indefinite"/>
-                                    </circle>
-                                    <circle cx="250" cy="60" r="25" fill="none" stroke="#00f5d4" strokeWidth="2" strokeDasharray="4 2">
-                                        <animateTransform attributeName="transform" type="rotate" from="0 250 60" to="360 250 60" dur="0.5s" repeatCount="indefinite"/>
-                                    </circle>
-                                    <circle cx="50" cy="140" r="25" fill="none" stroke="#00f5d4" strokeWidth="2" strokeDasharray="4 2">
-                                        <animateTransform attributeName="transform" type="rotate" from="0 50 140" to="-360 50 140" dur="0.5s" repeatCount="indefinite"/>
-                                    </circle>
-                                    <circle cx="250" cy="140" r="25" fill="none" stroke="#00f5d4" strokeWidth="2" strokeDasharray="4 2">
-                                        <animateTransform attributeName="transform" type="rotate" from="0 250 140" to="-360 250 140" dur="0.5s" repeatCount="indefinite"/>
-                                    </circle>
-                                    
-                                    {/* Motors */}
-                                    <circle cx="50" cy="60" r="8" fill="#111827" stroke="#a855f7" strokeWidth="2"/>
-                                    <circle cx="250" cy="60" r="8" fill="#111827" stroke="#a855f7" strokeWidth="2"/>
-                                    <circle cx="50" cy="140" r="8" fill="#111827" stroke="#a855f7" strokeWidth="2"/>
-                                    <circle cx="250" cy="140" r="8" fill="#111827" stroke="#a855f7" strokeWidth="2"/>
-                                    
-                                    {/* Camera */}
-                                    <circle cx="150" cy="115" r="8" fill="#0a0e17" stroke="#ff4757" strokeWidth="2"/>
-                                    <circle cx="150" cy="115" r="3" fill="#ff4757"/>
-                                    
-                                    {/* LED indicators */}
-                                    <circle cx="115" cy="90" r="3" fill="#00f5d4">
-                                        <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
-                                    </circle>
-                                    <circle cx="185" cy="90" r="3" fill="#ff4757">
-                                        <animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/>
-                                    </circle>
-                                </svg>
-                                
-                                {/* Attack indicators */}
-                                <div className="absolute -top-4 -right-4 px-3 py-1 rounded bg-[#ff4757] text-xs font-bold animate-pulse">
-                                    ⚠ GPS Spoof
+                        <div className="relative animate-fade-in" style={{ animationDelay: '0.2s' }}>
+                            <svg viewBox="0 0 400 300" className="w-full max-w-md mx-auto animate-float">
+                                <defs>
+                                    <filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+                                    <linearGradient id="bodyGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stopColor="#1e293b"/><stop offset="100%" stopColor="#0f172a"/></linearGradient>
+                                </defs>
+                                <line x1="160" y1="150" x2="80" y2="90" stroke="#334155" strokeWidth="6" strokeLinecap="round"/>
+                                <line x1="240" y1="150" x2="320" y2="90" stroke="#334155" strokeWidth="6" strokeLinecap="round"/>
+                                <line x1="160" y1="150" x2="80" y2="210" stroke="#334155" strokeWidth="6" strokeLinecap="round"/>
+                                <line x1="240" y1="150" x2="320" y2="210" stroke="#334155" strokeWidth="6" strokeLinecap="round"/>
+                                <ellipse cx="200" cy="150" rx="50" ry="25" fill="url(#bodyGrad)" stroke="#22d3ee" strokeWidth="2" filter="url(#glow)"/>
+                                {[[80,90],[320,90],[80,210],[320,210]].map(([cx,cy],i) => (
+                                    <g key={i}>
+                                        <circle cx={cx} cy={cy} r="30" fill="none" stroke="#22d3ee" strokeWidth="2" strokeDasharray="6 3" opacity="0.6">
+                                            <animateTransform attributeName="transform" type="rotate" from={`0 ${cx} ${cy}`} to={`${i%2===0?360:-360} ${cx} ${cy}`} dur="0.8s" repeatCount="indefinite"/>
+                                        </circle>
+                                        <circle cx={cx} cy={cy} r="10" fill="#111827" stroke="#f472b6" strokeWidth="2"/>
+                                    </g>
+                                ))}
+                                <circle cx="200" cy="170" r="10" fill="#0f172a" stroke="#ef4444" strokeWidth="2"/>
+                                <circle cx="200" cy="170" r="4" fill="#ef4444"><animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/></circle>
+                                <circle cx="165" cy="140" r="4" fill="#22d3ee"><animate attributeName="opacity" values="1;0.3;1" dur="1s" repeatCount="indefinite"/></circle>
+                                <circle cx="235" cy="140" r="4" fill="#ef4444"><animate attributeName="opacity" values="1;0.3;1" dur="1.5s" repeatCount="indefinite"/></circle>
+                            </svg>
+                            <div className="absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/30 text-red-400 text-xs font-mono animate-pulse">⚠ GPS SPOOF DETECTED</div>
+                            <div className="absolute bottom-4 left-4 px-3 py-1.5 rounded-lg bg-yellow-500/20 border border-yellow-500/30 text-yellow-400 text-xs font-mono">⚡ DEAUTH ATTACK</div>
+                        </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+                        {[
+                            { label: "Documented CVEs", value: STATS.totalCVEs, icon: "Bug", color: "#ef4444" },
+                            { label: "OWASP Risks", value: STATS.activeThreats, icon: "Shield", color: "#22d3ee" },
+                            { label: "Attack Vectors", value: STATS.attackVectors, icon: "Crosshair", color: "#f472b6" },
+                            { label: "Tools & Resources", value: "12+", icon: "Wrench", color: "#10b981" }
+                        ].map((stat,i) => (
+                            <div key={i} className="card p-6 animate-fade-in" style={{ animationDelay: `${0.1*i}s` }}>
+                                <div className="flex items-start justify-between mb-4">
+                                    <div className="p-2 rounded-lg flex items-center justify-center" style={{ background: `${stat.color}15` }}>
+                                        <Icon name={stat.icon} size={20} style={{ color: stat.color }}/>
+                                    </div>
                                 </div>
-                                <div className="absolute -bottom-4 -left-4 px-3 py-1 rounded bg-[#ffa502] text-xs font-bold">
-                                    WiFi Deauth
-                                </div>
+                                <div className="stat-value" style={{ color: stat.color }}>{stat.value}</div>
+                                <div className="text-sm text-gray-500 mt-1">{stat.label}</div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <div className="terminal animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                        <div className="terminal-header">
+                            <div className="terminal-dot" style={{ background: '#ff5f57' }}/><div className="terminal-dot" style={{ background: '#febc2e' }}/><div className="terminal-dot" style={{ background: '#28c840' }}/>
+                            <span className="ml-4 text-xs text-gray-500 font-mono">latest_cves.log</span>
+                        </div>
+                        <div className="terminal-content">
+                            <div className="comment"># Recent drone security vulnerabilities (2024-2025)</div>
+                            <div className="mt-2"><span className="keyword">CVE-2024-52876</span> <span className="text-gray-500">│</span> Holy Stone Remote ID <span className="text-gray-500">│</span> <span className="output">CVSS 7.5</span> <span className="text-gray-500">│</span> <span className="string">Patched</span></div>
+                            <div><span className="keyword">CVE-2024-6422</span>  <span className="text-gray-500">│</span> Consumer UAV Telnet <span className="text-gray-500">│</span> <span style={{ color: '#ff7b72' }}>CVSS 9.8</span> <span className="text-gray-500">│</span> <span className="number">Vendor Notified</span></div>
+                            <div><span className="keyword">CVE-2023-6951</span>  <span className="text-gray-500">│</span> DJI Mavic 3 WiFi   <span className="text-gray-500">│</span> <span className="number">CVSS 6.6</span> <span className="text-gray-500">│</span> <span className="string">Patched</span></div>
+                            <div><span className="keyword">NDSS-2023</span>      <span className="text-gray-500">│</span> DJI Multi-Model    <span className="text-gray-500">│</span> <span className="output">16 vulns</span> <span className="text-gray-500">│</span> <span className="string">Patched</span></div>
+                            <div className="mt-2 comment"># Type 'cves --all' for complete database</div>
+                        </div>
+                    </div>
+                    
+                    <div className="mt-16">
+                        <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
+                            <Icon name="Clock" size={24} className="text-cyan-400"/>
+                            <span>Security Research Timeline</span>
+                        </h2>
+                        <div className="relative">
+                            <div className="absolute left-4 top-0 bottom-0 w-px bg-gray-800"/>
+                            <div className="space-y-4">
+                                {TIMELINE.slice().reverse().slice(0,6).map((item,i) => (
+                                    <div key={i} className="relative pl-12 animate-slide-in" style={{ animationDelay: `${0.1*i}s` }}>
+                                        <div className={`absolute left-2 w-5 h-5 rounded-full border-2 flex items-center justify-center ${
+                                            item.type==='cve'?'border-red-400 bg-red-400/20':item.type==='research'?'border-cyan-400 bg-cyan-400/20':
+                                            item.type==='incident'?'border-yellow-400 bg-yellow-400/20':item.type==='mitigation'?'border-green-400 bg-green-400/20':'border-purple-400 bg-purple-400/20'}`}>
+                                            <div className={`w-2 h-2 rounded-full ${item.type==='cve'?'bg-red-400':item.type==='research'?'bg-cyan-400':item.type==='incident'?'bg-yellow-400':item.type==='mitigation'?'bg-green-400':'bg-purple-400'}`}/>
+                                        </div>
+                                        <div className="card p-4 flex items-center gap-4">
+                                            <span className="font-mono text-sm text-gray-500 w-12">{item.year}</span>
+                                            <span className="text-sm">{item.event}</span>
+                                            <span className={`ml-auto badge badge-outline text-xs ${item.type==='cve'?'text-red-400 border-red-400/50':item.type==='research'?'text-cyan-400 border-cyan-400/50':item.type==='incident'?'text-yellow-400 border-yellow-400/50':item.type==='mitigation'?'text-green-400 border-green-400/50':'text-purple-400 border-purple-400/50'}`}>{item.type}</span>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </div>
@@ -820,100 +785,71 @@
             </section>
         );
         
-        const Top10Section = ({ setActiveSection }) => {
+        // Risks Section
+        const RisksSection = () => {
             const [selectedRisk, setSelectedRisk] = useState(null);
+            const [filter, setFilter] = useState('all');
+            const filteredRisks = filter === 'all' ? OWASP_DRONE_TOP_10 : OWASP_DRONE_TOP_10.filter(r => r.severity === filter);
             
             return (
-                <section className="py-16 px-6">
+                <section className="pt-24 pb-16 px-6 min-h-screen">
                     <div className="max-w-7xl mx-auto">
-                        <div className="flex items-center gap-4 mb-8">
-                            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00f5d4]/20 to-[#a855f7]/20 flex items-center justify-center">
-                                <Icon name="Shield" size={24} className="text-[#00f5d4]" />
-                            </div>
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
                             <div>
-                                <h2 className="text-3xl font-bold">OWASP Drone Top 10</h2>
-                                <p className="text-[#94a3b8]">Critical security risks for unmanned aerial vehicles</p>
+                                <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-cyan-500/20 flex items-center justify-center">
+                                        <Icon name="Shield" size={24} className="text-cyan-400"/>
+                                    </div>
+                                    <span>OWASP Drone Top 10</span>
+                                </h1>
+                                <p className="text-gray-400">Critical security risks for unmanned aerial vehicles • Updated 2025</p>
+                            </div>
+                            <div className="flex flex-wrap gap-2">
+                                {['all','critical','high','medium','low'].map(f => (
+                                    <button key={f} onClick={() => setFilter(f)} className={`filter-chip ${filter===f?'active':''}`}>
+                                        {f.charAt(0).toUpperCase()+f.slice(1)}
+                                    </button>
+                                ))}
                             </div>
                         </div>
-                        
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                            {OWASP_DRONE_TOP_10.map((risk, index) => (
-                                <div
-                                    key={risk.id}
-                                    className={`card p-6 cursor-pointer animate-fade-in animate-delay-${index % 4 + 1}`}
-                                    onClick={() => setSelectedRisk(selectedRisk?.id === risk.id ? null : risk)}
-                                >
+                        <div className="grid lg:grid-cols-2 gap-4">
+                            {filteredRisks.map((risk,i) => (
+                                <div key={risk.id} className={`card card-interactive p-6 animate-fade-in ${selectedRisk?.id===risk.id?'ring-2 ring-cyan-400/50':''}`}
+                                    style={{ animationDelay: `${0.05*i}s` }} onClick={() => setSelectedRisk(selectedRisk?.id===risk.id?null:risk)}>
                                     <div className="flex items-start justify-between mb-4">
                                         <div className="flex items-center gap-3">
-                                            <span className="w-10 h-10 rounded-lg bg-[#1e293b] flex items-center justify-center font-bold text-[#00f5d4] mono">
-                                                {String(risk.id).padStart(2, '0')}
-                                            </span>
-                                            <h3 className="text-lg font-semibold">{risk.title}</h3>
+                                            <span className="w-12 h-12 rounded-xl bg-gray-800 flex items-center justify-center font-mono font-bold text-cyan-400 text-lg shrink-0">{risk.id}</span>
+                                            <div>
+                                                <h3 className="font-semibold text-lg">{risk.title}</h3>
+                                                <span className="text-xs text-gray-500 font-mono">{risk.protocol}</span>
+                                            </div>
                                         </div>
-                                        <SeverityBadge severity={risk.severity} />
+                                        <div className="flex items-center gap-2 shrink-0">
+                                            <CVSSBadge score={risk.cvss}/>
+                                            <SeverityBadge severity={risk.severity}/>
+                                        </div>
                                     </div>
-                                    
-                                    <p className="text-[#94a3b8] text-sm mb-4">{risk.description}</p>
-                                    
-                                    {selectedRisk?.id === risk.id && (
-                                        <div className="mt-4 pt-4 border-t border-[#1e293b] space-y-4 animate-fade-in">
-                                            <div>
-                                                <h4 className="text-sm font-semibold text-[#00f5d4] mb-2">Impact</h4>
-                                                <p className="text-sm text-[#94a3b8]">{risk.impact}</p>
+                                    <p className="text-gray-400 text-sm mb-4">{risk.description}</p>
+                                    {selectedRisk?.id===risk.id && (
+                                        <div className="border-t border-gray-800 pt-4 mt-4 space-y-4 animate-fade-in">
+                                            <div><h4 className="text-xs font-semibold text-cyan-400 uppercase tracking-wider mb-2">Impact</h4><p className="text-sm text-gray-300">{risk.impact}</p></div>
+                                            <div><h4 className="text-xs font-semibold text-yellow-400 uppercase tracking-wider mb-2">Real-World Example</h4><p className="text-sm text-gray-300">{risk.realExample}</p></div>
+                                            <div><h4 className="text-xs font-semibold text-green-400 uppercase tracking-wider mb-2">Mitigations</h4>
+                                                <div className="flex flex-wrap gap-2">{risk.mitigations.map((m,j) => <span key={j} className="text-xs px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20">{m}</span>)}</div>
                                             </div>
-                                            
-                                            <div>
-                                                <h4 className="text-sm font-semibold text-[#ffa502] mb-2">Real-World Example</h4>
-                                                <p className="text-sm text-[#94a3b8]">{risk.realWorld}</p>
+                                            <div><h4 className="text-xs font-semibold text-pink-400 uppercase tracking-wider mb-2">Attack Vectors</h4>
+                                                <div className="flex flex-wrap gap-2">{risk.attackVectors.map((av,j) => <span key={j} className="text-xs px-2 py-1 rounded bg-pink-500/10 text-pink-400 border border-pink-500/20">{av}</span>)}</div>
                                             </div>
-                                            
-                                            <div>
-                                                <h4 className="text-sm font-semibold text-[#28c840] mb-2">Mitigations</h4>
-                                                <ul className="space-y-1">
-                                                    {risk.mitigations.map((m, i) => (
-                                                        <li key={i} className="text-sm text-[#94a3b8] flex items-center gap-2">
-                                                            <Icon name="Check" size={14} className="text-[#28c840]" />
-                                                            {m}
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            </div>
-                                            
-                                            {risk.cves.length > 0 && (
-                                                <div>
-                                                    <h4 className="text-sm font-semibold text-[#ff4757] mb-2">Related CVEs</h4>
-                                                    <div className="flex flex-wrap gap-2">
-                                                        {risk.cves.map(cve => (
-                                                            <span key={cve} className="px-2 py-1 rounded bg-[#ff4757]/20 text-[#ff4757] text-xs mono">
-                                                                {cve}
-                                                            </span>
-                                                        ))}
-                                                    </div>
+                                            {risk.references.length>0 && (
+                                                <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">References</h4>
+                                                    <div className="flex flex-wrap gap-2">{risk.references.map((ref,j) => <span key={j} className="text-xs font-mono text-cyan-400">{ref}</span>)}</div>
                                                 </div>
                                             )}
-                                            
-                                            <div>
-                                                <h4 className="text-sm font-semibold text-[#a855f7] mb-2">Attack Vectors</h4>
-                                                <div className="flex flex-wrap gap-2">
-                                                    {risk.attackVectors.map(av => (
-                                                        <span key={av} className="px-2 py-1 rounded bg-[#a855f7]/20 text-[#a855f7] text-xs">
-                                                            {av}
-                                                        </span>
-                                                    ))}
-                                                </div>
-                                            </div>
                                         </div>
                                     )}
-                                    
-                                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#1e293b]">
-                                        <div className="flex gap-2">
-                                            {risk.attackVectors.slice(0, 2).map(av => (
-                                                <span key={av} className="px-2 py-1 rounded bg-[#1e293b] text-xs text-[#94a3b8]">
-                                                    {av}
-                                                </span>
-                                            ))}
-                                        </div>
-                                        <Icon name={selectedRisk?.id === risk.id ? "ChevronUp" : "ChevronDown"} size={18} className="text-[#94a3b8]" />
+                                    <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-800">
+                                        <div className="flex gap-2">{risk.attackVectors.slice(0,2).map((av,j) => <span key={j} className="text-xs px-2 py-1 rounded bg-gray-800 text-gray-400">{av}</span>)}</div>
+                                        <Icon name={selectedRisk?.id===risk.id?"ChevronUp":"ChevronDown"} size={16} className="text-gray-500"/>
                                     </div>
                                 </div>
                             ))}
@@ -923,192 +859,219 @@
             );
         };
         
-        const CVESection = () => (
-            <section className="py-16 px-6 bg-[#0d1117]">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ff4757]/20 to-[#ffa502]/20 flex items-center justify-center">
-                            <Icon name="Database" size={24} className="text-[#ff4757]" />
-                        </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">CVE Database</h2>
-                            <p className="text-[#94a3b8]">Documented drone vulnerabilities with technical details</p>
-                        </div>
-                    </div>
-                    
-                    <div className="overflow-x-auto rounded-xl border border-[#1e293b]">
-                        <table className="data-table">
-                            <thead>
-                                <tr>
-                                    <th>CVE ID</th>
-                                    <th>Product</th>
-                                    <th>Severity</th>
-                                    <th>CVSS</th>
-                                    <th>Status</th>
-                                    <th>Discovered</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {CVE_DATABASE.map(cve => (
-                                    <tr key={cve.id} className="cursor-pointer">
-                                        <td className="mono text-[#00f5d4] font-medium">{cve.id}</td>
-                                        <td>{cve.product}</td>
-                                        <td><SeverityBadge severity={cve.severity} /></td>
-                                        <td className="mono font-bold">{cve.cvss}</td>
-                                        <td>
-                                            <span className={`px-2 py-1 rounded text-xs ${
-                                                cve.status === 'Patched' ? 'bg-[#28c840]/20 text-[#28c840]' : 'bg-[#ffa502]/20 text-[#ffa502]'
-                                            }`}>
-                                                {cve.status}
-                                            </span>
-                                        </td>
-                                        <td className="text-[#94a3b8] text-sm">{cve.discovered}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-                        {CVE_DATABASE.slice(0, 2).map(cve => (
-                            <div key={cve.id} className="card p-6">
-                                <div className="flex items-center justify-between mb-4">
-                                    <span className="mono text-lg font-bold text-[#00f5d4]">{cve.id}</span>
-                                    <SeverityBadge severity={cve.severity} />
-                                </div>
-                                <h4 className="font-semibold mb-2">{cve.product}</h4>
-                                <p className="text-sm text-[#94a3b8] mb-4">{cve.description}</p>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-sm text-[#94a3b8]">CVSS: <strong className="text-white">{cve.cvss}</strong></span>
-                                    <a 
-                                        href={cve.references[0]} 
-                                        target="_blank" 
-                                        rel="noopener"
-                                        className="flex items-center gap-2 text-sm text-[#00f5d4] hover:underline"
-                                    >
-                                        View Details <Icon name="ExternalLink" size={14} />
-                                    </a>
-                                </div>
+        // CVE Section
+        const CVESection = () => {
+            const [selectedCVE, setSelectedCVE] = useState(null);
+            const [searchQuery, setSearchQuery] = useState('');
+            const [sortBy, setSortBy] = useState('cvss');
+            
+            const filteredCVEs = useMemo(() => {
+                let result = [...CVE_DATABASE];
+                if (searchQuery) {
+                    const q = searchQuery.toLowerCase();
+                    result = result.filter(cve => cve.id.toLowerCase().includes(q) || cve.product.toLowerCase().includes(q) || cve.vendor.toLowerCase().includes(q));
+                }
+                result.sort((a,b) => sortBy==='cvss' ? b.cvss-a.cvss : new Date(b.discovered)-new Date(a.discovered));
+                return result;
+            }, [searchQuery, sortBy]);
+            
+            return (
+                <section className="pt-24 pb-16 px-6 min-h-screen">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
+                            <div>
+                                <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                                    <div className="p-2 rounded-lg bg-red-500/20 flex items-center justify-center">
+                                        <Icon name="Database" size={24} className="text-red-400"/>
+                                    </div>
+                                    <span>CVE Database</span>
+                                </h1>
+                                <p className="text-gray-400">{CVE_DATABASE.length} documented drone vulnerabilities with technical details</p>
                             </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-        );
-        
-        const AttackVectorsSection = () => (
-            <section className="py-16 px-6">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#ffa502]/20 to-[#ff4757]/20 flex items-center justify-center">
-                            <Icon name="Crosshair" size={24} className="text-[#ffa502]" />
+                            <div className="flex items-center gap-3">
+                                <div className="relative">
+                                    <Icon name="Search" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"/>
+                                    <input type="text" placeholder="Search CVEs..." value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} className="search-input w-64"/>
+                                </div>
+                                <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="px-4 py-2.5 rounded-lg bg-gray-800 border border-gray-700 text-sm focus:outline-none focus:border-cyan-400">
+                                    <option value="cvss">Sort by CVSS</option><option value="date">Sort by Date</option>
+                                </select>
+                            </div>
                         </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">Attack Vectors</h2>
-                            <p className="text-[#94a3b8]">Common attack methodologies and techniques</p>
+                        
+                        <div className="card overflow-hidden mb-8">
+                            <div className="overflow-x-auto">
+                                <table className="data-table">
+                                    <thead><tr><th>CVE ID</th><th>Product / Vendor</th><th>Severity</th><th>CVSS</th><th>Status</th><th>Discovered</th><th></th></tr></thead>
+                                    <tbody>
+                                        {filteredCVEs.map(cve => (
+                                            <tr key={cve.id} className="cursor-pointer" onClick={() => setSelectedCVE(selectedCVE?.id===cve.id?null:cve)}>
+                                                <td><span className="font-mono font-medium text-cyan-400">{cve.id}</span></td>
+                                                <td><div><div className="font-medium">{cve.product}</div><div className="text-xs text-gray-500">{cve.vendor}</div></div></td>
+                                                <td><SeverityBadge severity={cve.severity}/></td>
+                                                <td><CVSSBadge score={cve.cvss}/></td>
+                                                <td><StatusBadge status={cve.status}/></td>
+                                                <td className="text-gray-400 text-sm font-mono">{cve.discovered}</td>
+                                                <td><Icon name={selectedCVE?.id===cve.id?"ChevronUp":"ChevronDown"} size={16} className="text-gray-500"/></td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div className="space-y-8">
-                        {ATTACK_VECTORS.map((category, catIndex) => (
-                            <div key={category.category} className="animate-fade-in" style={{ animationDelay: `${catIndex * 0.1}s` }}>
-                                <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                                    <span className="w-2 h-2 rounded-full bg-[#00f5d4]" />
-                                    {category.category}
-                                </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {category.attacks.map(attack => (
-                                        <div key={attack.name} className="card p-5">
-                                            <div className="flex items-start justify-between mb-3">
-                                                <h4 className="font-semibold text-[#00f5d4]">{attack.name}</h4>
-                                                <span className={`px-2 py-1 rounded text-xs ${
-                                                    attack.difficulty === 'Easy' ? 'bg-[#28c840]/20 text-[#28c840]' :
-                                                    attack.difficulty === 'Medium' ? 'bg-[#ffa502]/20 text-[#ffa502]' :
-                                                    'bg-[#ff4757]/20 text-[#ff4757]'
-                                                }`}>
-                                                    {attack.difficulty}
-                                                </span>
-                                            </div>
-                                            <p className="text-sm text-[#94a3b8] mb-3">{attack.description}</p>
-                                            <div className="flex flex-wrap gap-2">
-                                                {attack.tools.map(tool => (
-                                                    <span key={tool} className="px-2 py-1 rounded bg-[#1e293b] text-xs mono">
-                                                        {tool}
-                                                    </span>
-                                                ))}
-                                            </div>
+                        
+                        {selectedCVE && (
+                            <div className="card p-6 animate-fade-in">
+                                <div className="flex items-start justify-between mb-6">
+                                    <div><h2 className="text-2xl font-mono font-bold text-cyan-400 mb-1">{selectedCVE.id}</h2><p className="text-gray-400">{selectedCVE.product}</p></div>
+                                    <div className="flex items-center gap-3">
+                                        <div className="text-right"><div className="text-3xl font-bold" style={{ color: selectedCVE.cvss>=9?'#ef4444':selectedCVE.cvss>=7?'#f97316':'#eab308' }}>{selectedCVE.cvss}</div><div className="text-xs text-gray-500">CVSS Score</div></div>
+                                        <SeverityBadge severity={selectedCVE.severity}/>
+                                    </div>
+                                </div>
+                                <div className="grid md:grid-cols-2 gap-6">
+                                    <div className="space-y-4">
+                                        <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Description</h4><p className="text-sm text-gray-300">{selectedCVE.description}</p></div>
+                                        <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Impact</h4><p className="text-sm text-gray-300">{selectedCVE.impact}</p></div>
+                                        <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Vulnerability Type</h4><span className="text-sm font-mono text-pink-400">{selectedCVE.type}</span></div>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Attack Vector</h4><p className="text-sm text-gray-300">{selectedCVE.attackVector}</p></div>
+                                            <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Exploit Difficulty</h4><DifficultyBadge difficulty={selectedCVE.exploitDifficulty}/></div>
                                         </div>
-                                    ))}
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Status</h4><StatusBadge status={selectedCVE.status}/></div>
+                                            <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Exploit Available</h4><span className={`text-sm ${selectedCVE.exploitAvailable?'text-red-400':'text-green-400'}`}>{selectedCVE.exploitAvailable?'Yes':'No'}</span></div>
+                                        </div>
+                                        <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">CVSS Vector</h4><code className="text-xs font-mono text-gray-400 bg-gray-800 px-2 py-1 rounded">{selectedCVE.cvssVector}</code></div>
+                                        <div><h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">References</h4>
+                                            <div className="space-y-1">{selectedCVE.references.map((ref,i) => (
+                                                <a key={i} href={ref.url} target="_blank" rel="noopener" className="flex items-center gap-2 text-sm text-cyan-400 hover:underline">
+                                                    <Icon name="ExternalLink" size={12}/>
+                                                    <span>{ref.title}</span>
+                                                </a>
+                                            ))}</div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        ))}
+                        )}
                     </div>
-                    
-                    {/* Attack Chain Visualization */}
-                    <div className="mt-12 card p-8">
-                        <h3 className="text-xl font-semibold mb-6">Example Attack Chain: Drone Hijacking</h3>
-                        <div className="flex flex-wrap items-center gap-4 justify-center">
-                            <div className="attack-step bg-[#ff4757]/10 border-[#ff4757]/30">
-                                <Icon name="Wifi" size={16} className="text-[#ff4757] inline mr-2" />
-                                Scan WiFi
-                            </div>
-                            <span className="attack-arrow">→</span>
-                            <div className="attack-step bg-[#ffa502]/10 border-[#ffa502]/30">
-                                <Icon name="WifiOff" size={16} className="text-[#ffa502] inline mr-2" />
-                                Deauth User
-                            </div>
-                            <span className="attack-arrow">→</span>
-                            <div className="attack-step bg-[#a855f7]/10 border-[#a855f7]/30">
-                                <Icon name="Plug" size={16} className="text-[#a855f7] inline mr-2" />
-                                Connect to AP
-                            </div>
-                            <span className="attack-arrow">→</span>
-                            <div className="attack-step bg-[#00f5d4]/10 border-[#00f5d4]/30">
-                                <Icon name="Terminal" size={16} className="text-[#00f5d4] inline mr-2" />
-                                Telnet Root
-                            </div>
-                            <span className="attack-arrow">→</span>
-                            <div className="attack-step bg-[#28c840]/10 border-[#28c840]/30">
-                                <Icon name="Gamepad2" size={16} className="text-[#28c840] inline mr-2" />
-                                Full Control
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        );
+                </section>
+            );
+        };
         
-        const ToolsSection = () => (
-            <section className="py-16 px-6 bg-[#0d1117]">
-                <div className="max-w-7xl mx-auto">
-                    <div className="flex items-center gap-4 mb-8">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#a855f7]/20 to-[#00f5d4]/20 flex items-center justify-center">
-                            <Icon name="Wrench" size={24} className="text-[#a855f7]" />
+        // Attack Section
+        const AttackSection = () => {
+            const [selectedCategory, setSelectedCategory] = useState(ATTACK_VECTORS[0].category);
+            const currentCategory = ATTACK_VECTORS.find(c => c.category === selectedCategory);
+            
+            return (
+                <section className="pt-24 pb-16 px-6 min-h-screen">
+                    <div className="max-w-7xl mx-auto">
+                        <div className="mb-8">
+                            <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                                <div className="p-2 rounded-lg bg-pink-500/20 flex items-center justify-center">
+                                    <Icon name="Crosshair" size={24} className="text-pink-400"/>
+                                </div>
+                                <span>Attack Vector Matrix</span>
+                            </h1>
+                            <p className="text-gray-400">Documented attack techniques mapped to MITRE ATT&CK framework</p>
                         </div>
-                        <div>
-                            <h2 className="text-3xl font-bold">Tools & Resources</h2>
-                            <p className="text-[#94a3b8]">Security tools, frameworks, and documentation</p>
+                        
+                        <div className="flex flex-wrap gap-3 mb-8">
+                            {ATTACK_VECTORS.map(cat => (
+                                <button key={cat.category} onClick={() => setSelectedCategory(cat.category)}
+                                    className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${selectedCategory===cat.category?'bg-gray-700 text-white':'bg-gray-800/50 text-gray-400 hover:bg-gray-800'}`}>
+                                    <Icon name={cat.icon} size={16} style={{ color: cat.color }}/>
+                                    <span>{cat.category}</span>
+                                </button>
+                            ))}
+                        </div>
+                        
+                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+                            {currentCategory?.attacks.map((attack,i) => (
+                                <div key={attack.name} className="card p-5 animate-fade-in" style={{ animationDelay: `${0.05*i}s` }}>
+                                    <div className="flex items-start justify-between mb-3">
+                                        <h3 className="font-semibold" style={{ color: currentCategory.color }}>{attack.name}</h3>
+                                        <span className="text-xs font-mono text-gray-500">{attack.mitre}</span>
+                                    </div>
+                                    <p className="text-sm text-gray-400 mb-4">{attack.desc}</p>
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex flex-wrap gap-1">{attack.tools.map((tool,j) => <span key={j} className="text-xs px-2 py-0.5 rounded bg-gray-800 text-gray-400 font-mono">{tool}</span>)}</div>
+                                        <DifficultyBadge difficulty={attack.difficulty}/>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="card p-8">
+                            <h3 className="text-xl font-semibold mb-6 flex items-center gap-3">
+                                <Icon name="GitBranch" size={20} className="text-cyan-400"/>
+                                <span>Example Attack Chain: Drone Hijacking</span>
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-3 justify-center">
+                                {[{ step: "Scan WiFi", icon: "Wifi", color: "#ef4444" },{ step: "Deauth Attack", icon: "WifiOff", color: "#f97316" },
+                                  { step: "Connect to AP", icon: "Plug", color: "#eab308" },{ step: "Telnet Root", icon: "Terminal", color: "#22d3ee" },
+                                  { step: "Full Control", icon: "Gamepad2", color: "#10b981" }].map((s,i) => (
+                                    <div key={s.step} className="attack-node flex items-center gap-3">
+                                        <Icon name={s.icon} size={18} style={{ color: s.color }}/>
+                                        <span className="text-sm font-medium">{s.step}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                        
+                        <div className="mt-8 grid md:grid-cols-2 gap-6">
+                            <div className="terminal">
+                                <div className="terminal-header"><div className="terminal-dot" style={{ background: '#ff5f57' }}/><div className="terminal-dot" style={{ background: '#febc2e' }}/><div className="terminal-dot" style={{ background: '#28c840' }}/><span className="ml-4 text-xs text-gray-500">network_recon.sh</span></div>
+                                <div className="terminal-content">
+                                    <div className="comment"># Scan drone network</div><div><span className="keyword">$</span> nmap -sV -p 21,22,23,80,5555 192.168.1.1</div>
+                                    <div className="mt-2 comment"># Monitor WiFi</div><div><span className="keyword">$</span> airodump-ng wlan0mon</div>
+                                    <div className="mt-2 comment"># Connect via Telnet</div><div><span className="keyword">$</span> telnet 192.168.1.1</div>
+                                </div>
+                            </div>
+                            <div className="terminal">
+                                <div className="terminal-header"><div className="terminal-dot" style={{ background: '#ff5f57' }}/><div className="terminal-dot" style={{ background: '#febc2e' }}/><div className="terminal-dot" style={{ background: '#28c840' }}/><span className="ml-4 text-xs text-gray-500">mavlink_analysis.py</span></div>
+                                <div className="terminal-content">
+                                    <div className="comment"># Capture MAVLink traffic</div><div><span className="keyword">$</span> mavproxy.py --master=udp:0.0.0.0:14550</div>
+                                    <div className="mt-2 comment"># Firmware extraction</div><div><span className="keyword">$</span> binwalk -e firmware.bin</div>
+                                    <div className="mt-2 comment"># Find credentials</div><div><span className="keyword">$</span> strings firmware.bin | grep -i pass</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                </section>
+            );
+        };
+        
+        // Tools Section
+        const ToolsSection = () => (
+            <section className="pt-24 pb-16 px-6 min-h-screen">
+                <div className="max-w-7xl mx-auto">
+                    <div className="mb-8">
+                        <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
+                            <div className="p-2 rounded-lg bg-green-500/20 flex items-center justify-center">
+                                <Icon name="Wrench" size={24} className="text-green-400"/>
+                            </div>
+                            <span>Tools & Resources</span>
+                        </h1>
+                        <p className="text-gray-400">Curated security tools, frameworks, and research documentation</p>
+                    </div>
                     
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {TOOLS_RESOURCES.map(category => (
-                            <div key={category.category}>
-                                <h3 className="text-lg font-semibold mb-4 text-[#00f5d4]">{category.category}</h3>
+                    <div className="grid lg:grid-cols-3 gap-8">
+                        {TOOLS.map((category,i) => (
+                            <div key={category.category} className="animate-fade-in" style={{ animationDelay: `${0.1*i}s` }}>
+                                <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                                    <Icon name={category.icon} size={18} className="text-cyan-400"/>
+                                    <span>{category.category}</span>
+                                </h2>
                                 <div className="space-y-3">
-                                    {category.items.map(item => (
-                                        <a
-                                            key={item.name}
-                                            href={item.url}
-                                            target="_blank"
-                                            rel="noopener"
-                                            className="card block p-4 hover:border-[#a855f7]"
-                                        >
-                                            <div className="flex items-center justify-between mb-2">
-                                                <span className="font-medium">{item.name}</span>
-                                                <Icon name="ExternalLink" size={14} className="text-[#94a3b8]" />
-                                            </div>
-                                            <p className="text-sm text-[#94a3b8]">{item.description}</p>
+                                    {category.items.map(tool => (
+                                        <a key={tool.name} href={tool.url} target="_blank" rel="noopener" className="card block p-4 hover:border-cyan-400/50">
+                                            <div className="flex items-center justify-between mb-2"><span className="font-medium">{tool.name}</span><span className="text-xs text-gray-500 font-mono">{tool.stars}</span></div>
+                                            <p className="text-sm text-gray-400">{tool.desc}</p>
                                         </a>
                                     ))}
                                 </div>
@@ -1116,137 +1079,74 @@
                         ))}
                     </div>
                     
-                    {/* Quick Reference Commands */}
                     <div className="mt-12">
-                        <h3 className="text-xl font-semibold mb-6">Quick Reference Commands</h3>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="terminal">
-                                <div className="terminal-header">
-                                    <div className="terminal-dot bg-[#ff5f57]" />
-                                    <div className="terminal-dot bg-[#febc2e]" />
-                                    <div className="terminal-dot bg-[#28c840]" />
-                                    <span className="ml-4 text-xs text-[#6e7681]">Network Reconnaissance</span>
-                                </div>
-                                <div className="p-4 text-sm">
-                                    <div className="text-[#6e7681]"># Scan drone network</div>
-                                    <div><span className="text-[#ff7b72]">$</span> nmap -sV -p 21,22,23,80,5555 192.168.1.1</div>
-                                    <div className="mt-2 text-[#6e7681]"># Monitor WiFi traffic</div>
-                                    <div><span className="text-[#ff7b72]">$</span> airodump-ng wlan0mon</div>
-                                    <div className="mt-2 text-[#6e7681]"># Connect via Telnet</div>
-                                    <div><span className="text-[#ff7b72]">$</span> telnet 192.168.1.1</div>
-                                </div>
-                            </div>
-                            
-                            <div className="terminal">
-                                <div className="terminal-header">
-                                    <div className="terminal-dot bg-[#ff5f57]" />
-                                    <div className="terminal-dot bg-[#febc2e]" />
-                                    <div className="terminal-dot bg-[#28c840]" />
-                                    <span className="ml-4 text-xs text-[#6e7681]">MAVLink Analysis</span>
-                                </div>
-                                <div className="p-4 text-sm">
-                                    <div className="text-[#6e7681]"># Capture MAVLink traffic</div>
-                                    <div><span className="text-[#ff7b72]">$</span> mavproxy.py --master=udp:0.0.0.0:14550</div>
-                                    <div className="mt-2 text-[#6e7681]"># Send heartbeat</div>
-                                    <div><span className="text-[#ff7b72]">$</span> python3 mavlink_heartbeat.py</div>
-                                    <div className="mt-2 text-[#6e7681]"># Disarm command (dangerous!)</div>
-                                    <div><span className="text-[#ff7b72]">$</span> mavproxy.py --cmd="arm uncheck all"</div>
-                                </div>
-                            </div>
+                        <h2 className="text-xl font-semibold mb-6 flex items-center gap-3">
+                            <Icon name="BookOpen" size={20} className="text-pink-400"/>
+                            <span>Key Research Publications</span>
+                        </h2>
+                        <div className="grid md:grid-cols-2 gap-4">
+                            {[{ title: "Drone Security and the Mysterious Case of DJI's DroneID", venue: "NDSS 2023", authors: "Schiller et al.", url: "#", impact: "16 vulnerabilities, DroneID reversal" },
+                              { title: "DJI Mavic 3 Drone Research", venue: "Nozomi Networks 2024", authors: "Nozomi Labs", url: "https://www.nozominetworks.com/blog/dji-mavic-3-drone-research-part-2-vulnerability-analysis", impact: "9 vulnerabilities in QuickTransfer" },
+                              { title: "D3S: Drone Security Scoring System", venue: "MDPI 2024", authors: "Multiple", url: "https://www.mdpi.com/2078-2489/15/12/811", impact: "Security assessment methodology" },
+                              { title: "EMFI Attack on DJI Mavic Pro", venue: "IOActive 2023", authors: "Gonzalez", url: "#", impact: "Electromagnetic fault injection" }
+                            ].map((paper,i) => (
+                                <a key={i} href={paper.url} target="_blank" rel="noopener" className="card p-5 hover:border-pink-400/50">
+                                    <h3 className="font-medium mb-1">{paper.title}</h3>
+                                    <div className="flex items-center gap-2 text-xs text-gray-500 mb-2"><span className="font-mono">{paper.venue}</span><span>•</span><span>{paper.authors}</span></div>
+                                    <p className="text-sm text-gray-400">{paper.impact}</p>
+                                </a>
+                            ))}
                         </div>
                     </div>
                 </div>
             </section>
         );
         
+        // Footer
         const Footer = () => (
-            <footer className="py-12 px-6 border-t border-[#1e293b]">
+            <footer className="border-t border-gray-800 py-12 px-6">
                 <div className="max-w-7xl mx-auto">
                     <div className="flex flex-col md:flex-row items-center justify-between gap-6">
                         <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#00f5d4] to-[#a855f7] flex items-center justify-center">
-                                <Icon name="Shield" size={20} className="text-[#0a0e17]" />
+                            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-pink-400 flex items-center justify-center">
+                                <Icon name="Shield" size={18} className="text-gray-900"/>
                             </div>
                             <div>
                                 <div className="font-bold">DroneSecKB</div>
-                                <div className="text-sm text-[#94a3b8]">Drone Security Knowledge Base</div>
+                                <div className="text-xs text-gray-500">UAV Security Knowledge Base</div>
                             </div>
                         </div>
-                        
-                        <div className="flex items-center gap-6 text-sm text-[#94a3b8]">
-                            <a href="https://owasp.org/www-project-top-10-drone-security-risks/" target="_blank" rel="noopener" className="hover:text-[#00f5d4]">
-                                OWASP Drone Project
-                            </a>
-                            <a href="https://cheatsheetseries.owasp.org/cheatsheets/Drone_Security_Cheat_Sheet.html" target="_blank" rel="noopener" className="hover:text-[#00f5d4]">
-                                Cheat Sheet
-                            </a>
-                            <a href="https://nvd.nist.gov/" target="_blank" rel="noopener" className="hover:text-[#00f5d4]">
-                                NVD
-                            </a>
+                        <div className="flex items-center gap-6 text-sm text-gray-500">
+                            <a href="https://owasp.org/www-project-top-10-drone-security-risks/" target="_blank" rel="noopener" className="hover:text-cyan-400 transition-colors">OWASP</a>
+                            <a href="https://nvd.nist.gov/" target="_blank" rel="noopener" className="hover:text-cyan-400 transition-colors">NVD</a>
+                            <a href="https://attack.mitre.org/" target="_blank" rel="noopener" className="hover:text-cyan-400 transition-colors">MITRE ATT&CK</a>
                         </div>
-                        
-                        <div className="text-sm text-[#94a3b8]">
-                            Built for UAV Security Research • 2024
-                        </div>
+                        <div className="text-sm text-gray-500">Built for UAV Security Research • 2025</div>
                     </div>
-                    
-                    <div className="mt-8 pt-8 border-t border-[#1e293b] text-center text-sm text-[#64748b]">
-                        <p>⚠️ This knowledge base is for educational and defensive security research purposes only.</p>
-                        <p className="mt-2">Unauthorized access to computer systems is illegal. Always obtain proper authorization before testing.</p>
+                    <div className="mt-8 pt-8 border-t border-gray-800 text-center">
+                        <p className="text-xs text-gray-600">⚠️ This knowledge base is for educational and defensive security research purposes only. Unauthorized access to systems is illegal. Always obtain proper authorization before testing.</p>
                     </div>
                 </div>
             </footer>
         );
         
-        // ==================== APP ====================
-        
+        // App
         const App = () => {
-            const [activeSection, setActiveSection] = useState('overview');
-            
-            return (
-                <div className="min-h-screen">
-                    <Navigation activeSection={activeSection} setActiveSection={setActiveSection} />
-                    
-                    {activeSection === 'overview' && (
-                        <>
-                            <HeroSection />
-                            <Top10Section setActiveSection={setActiveSection} />
-                            <CVESection />
-                            <AttackVectorsSection />
-                            <ToolsSection />
-                        </>
-                    )}
-                    
-                    {activeSection === 'top10' && (
-                        <div className="pt-24">
-                            <Top10Section setActiveSection={setActiveSection} />
-                        </div>
-                    )}
-                    
-                    {activeSection === 'cves' && (
-                        <div className="pt-24">
-                            <CVESection />
-                        </div>
-                    )}
-                    
-                    {activeSection === 'attacks' && (
-                        <div className="pt-24">
-                            <AttackVectorsSection />
-                        </div>
-                    )}
-                    
-                    {activeSection === 'tools' && (
-                        <div className="pt-24">
-                            <ToolsSection />
-                        </div>
-                    )}
-                    
-                    <Footer />
-                </div>
-            );
+            const [activeSection, setActiveSection] = useState('dashboard');
+            const renderSection = () => {
+                switch(activeSection) {
+                    case 'dashboard': return <DashboardSection setActiveSection={setActiveSection}/>;
+                    case 'risks': return <RisksSection/>;
+                    case 'cves': return <CVESection/>;
+                    case 'attacks': return <AttackSection/>;
+                    case 'tools': return <ToolsSection/>;
+                    default: return <DashboardSection setActiveSection={setActiveSection}/>;
+                }
+            };
+            return <div className="min-h-screen"><Navigation activeSection={activeSection} setActiveSection={setActiveSection}/>{renderSection()}<Footer/></div>;
         };
         
-        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+        ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
     </script>
 </body>
 </html>
