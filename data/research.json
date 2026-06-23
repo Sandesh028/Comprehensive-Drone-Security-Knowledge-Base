@@ -1,0 +1,30 @@
+{
+  "intro": "Original research on unmanned aircraft systems, with a bias toward the surfaces that ship insecure and rarely get looked at. Disclosures below are coordinated; the flagship CVEs are credited to me by MITRE.",
+  "methodology": [
+    { "step": 1, "name": "Acquire & Map", "detail": "Open the airframe, find the debug headers, map the onboard services and the RF link." },
+    { "step": 2, "name": "Extract & Analyze", "detail": "Pull firmware, fuzz the control protocol, and look for the auth that should be there and is not." },
+    { "step": 3, "name": "Prove & Disclose", "detail": "Build a minimal proof, write the teardown, and disclose to the vendor before publishing." },
+    { "step": 4, "name": "Help Defenders", "detail": "Convert each finding into a detection signature so the result is useful to blue teams, not just attackers." }
+  ],
+  "publications": [
+    {
+      "title": "FILL_ME: title of a paper, blog post, or advisory you wrote",
+      "venue": "FILL_ME: where it appeared",
+      "year": "FILL_ME: 20XX",
+      "url": "FILL_ME: link",
+      "summary": "FILL_ME: one sentence on what it showed."
+    }
+  ],
+  "talks": [
+    {
+      "title": "FILL_ME: talk title (delete this block if none yet)",
+      "event": "FILL_ME: conference / meetup",
+      "year": "FILL_ME: 20XX",
+      "url": "FILL_ME: slides or recording"
+    }
+  ],
+  "contributions": [
+    "FILL_ME: e.g. 'Submitted UAS findings upstream to the OWASP Drone Top 10 project'",
+    "FILL_ME: e.g. 'Maintainer of the open DroneSecKB reference'"
+  ]
+}

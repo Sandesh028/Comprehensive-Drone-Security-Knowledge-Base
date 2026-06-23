@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CVE Register · DroneSecKB</title>
+<meta name="description" content="Searchable UAS CVE register, auto-fed from the NVD API.">
+<meta property="og:title" content="CVE Register · DroneSecKB">
+<meta property="og:description" content="Searchable UAS CVE register, auto-fed from the NVD API.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>:root{
+  --void:#070B14; --panel:#0C1322; --panel-2:#101a2e; --panel-3:#0a1018; --grid:#1B2942; --grid-2:#243657;
+  --ink:#E7EEFA; --muted:#8A9BB5; --faint:#5d6f8c;
+  --scope:#34E5C4; --scope-2:#58C7F3;
+  --critical:#FF5C72; --high:#FF9F45; --medium:#FFD23F; --low:#58C7F3; --na:#5d6f8c;
+  --disp:'Space Grotesk',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif; --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --maxw:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--void);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(900px 500px at 80% -10%,rgba(52,229,196,.07),transparent 60%),radial-gradient(700px 600px at 0% 100%,rgba(88,199,243,.05),transparent 55%);}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{font-family:var(--disp);font-weight:700;letter-spacing:-.02em;line-height:1.08;margin:0}
+.eyebrow{font-family:var(--mono);font-size:.7rem;letter-spacing:.22em;color:var(--scope);text-transform:uppercase;margin:0 0 .9rem}
+.muted{color:var(--muted)} .tiny{font-size:.72rem} .sm{font-size:.95rem}
+.scanline{position:fixed;inset:0;pointer-events:none;z-index:200;mix-blend-mode:overlay;opacity:.5;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px)}
+
+/* topbar */
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:1.4rem;padding:.85rem clamp(1rem,4vw,2.4rem);background:rgba(7,11,20,.8);backdrop-filter:blur(14px);border-bottom:1px solid var(--grid)}
+.brand{font-family:var(--disp);font-weight:700;font-size:1.05rem;display:flex;align-items:center;gap:.5rem}
+.brand .logo{color:var(--scope);font-size:.8rem}
+.brand .ver{font-family:var(--mono);font-size:.62rem;color:var(--faint);padding:.1rem .4rem;border:1px solid var(--grid);border-radius:4px;margin-left:.3rem}
+.nav{display:flex;gap:.2rem;margin-left:auto;flex-wrap:wrap}
+.nav a{font-family:var(--mono);font-size:.74rem;letter-spacing:.03em;color:var(--muted);padding:.45rem .7rem;border-radius:6px;transition:.18s}
+.nav a:hover{color:var(--ink);background:var(--panel)} .nav a.active{color:var(--scope)}
+.ghbtn{font-family:var(--mono);font-size:.74rem;color:var(--void);background:var(--scope);padding:.5rem .85rem;border-radius:6px;font-weight:600;transition:.18s}
+.ghbtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.menu-btn{display:none;background:transparent;border:1px solid var(--grid);color:var(--ink);font-size:1.1rem;border-radius:6px;padding:.3rem .6rem;cursor:pointer;margin-left:auto}
+
+main{max-width:var(--maxw);margin:0 auto;padding:0 clamp(1rem,4vw,2.4rem)}
+
+/* buttons */
+.btn{font-family:var(--mono);font-size:.8rem;padding:.7rem 1.2rem;border-radius:7px;transition:.18s;border:1px solid transparent;display:inline-block}
+.btn.sm{padding:.5rem .9rem;font-size:.74rem}
+.btn.primary{background:var(--scope);color:var(--void);font-weight:600}
+.btn.primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.ghost{border-color:var(--grid);color:var(--ink)} .btn.ghost:hover{border-color:var(--scope);color:var(--scope)}
+
+/* hero */
+.hero{padding:clamp(3rem,8vw,6rem) 0 clamp(2rem,5vw,3.5rem)}
+.hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(1.5rem,4vw,3.5rem);align-items:center}
+.hero h1{font-size:clamp(2.6rem,6.5vw,5rem);margin:.2rem 0 1.2rem}
+.lede{font-size:1.06rem;color:var(--muted);max-width:46ch;margin:0 0 2rem} .lede.sm{font-size:.98rem}
+.hero-stats{display:grid;grid-template-columns:repeat(4,auto);gap:clamp(1rem,3vw,2.4rem);margin-bottom:1.6rem}
+.stat b{font-family:var(--mono);font-size:clamp(1.7rem,4vw,2.5rem);font-weight:600;display:block;line-height:1}
+.stat span{font-family:var(--mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;color:var(--faint)}
+.own-line{font-size:.92rem;color:var(--muted);border-left:2px solid var(--scope);padding-left:.9rem;margin:0 0 2rem}
+.own-line b{color:var(--scope)}
+.hero-cta{display:flex;gap:.8rem;flex-wrap:wrap}
+
+/* radar */
+.scope{margin:0;position:relative}
+.scope svg{width:100%;height:auto;display:block;filter:drop-shadow(0 0 40px rgba(52,229,196,.18))}
+.ring{fill:none;stroke:var(--grid);stroke-width:.3}.ring.outer{stroke:var(--scope);stroke-opacity:.4;stroke-width:.4}
+.cross{stroke:var(--grid);stroke-width:.2}
+.sweep{transform-origin:50px 50px;animation:sweep 4.4s linear infinite}.sweep path{fill:var(--scope);opacity:.16}
+.blip circle{fill:var(--na)}
+.blip .ping{fill:none;stroke:currentColor;stroke-width:.5;transform-origin:center;animation:ping 2.6s ease-out infinite;animation-delay:var(--d)}
+.blip.sev-critical{color:var(--critical)}.blip.sev-critical circle:first-child{fill:var(--critical)}
+.blip.sev-high{color:var(--high)}.blip.sev-high circle:first-child{fill:var(--high)}
+.blip.sev-medium{color:var(--medium)}.blip.sev-medium circle:first-child{fill:var(--medium)}
+.blip.sev-low{color:var(--low)}.blip.sev-low circle:first-child{fill:var(--low)}
+.blip-label{font-family:var(--mono);font-size:2.4px;fill:var(--muted)}
+.scope figcaption{font-family:var(--mono);font-size:.64rem;letter-spacing:.08em;color:var(--faint);text-align:center;margin-top:.8rem;text-transform:uppercase}
+@keyframes sweep{to{transform:rotate(360deg)}}
+@keyframes ping{0%{transform:scale(1);opacity:.9}80%,100%{transform:scale(4.5);opacity:0}}
+
+/* page header */
+.phead{padding:clamp(2.4rem,6vw,4rem) 0 1rem;max-width:64ch}
+.phead h1{font-size:clamp(2.2rem,5vw,3.6rem);margin:.3rem 0 .8rem}
+.phead-sub{color:var(--muted);font-size:1.02rem;margin:0}
+.subnav{display:flex;gap:.4rem;flex-wrap:wrap;padding:1rem 0 0;border-bottom:1px solid var(--grid)}
+.subnav a{font-family:var(--mono);font-size:.74rem;color:var(--muted);padding:.5rem .8rem;border-radius:7px 7px 0 0;transition:.16s}
+.subnav a:hover{color:var(--scope);background:var(--panel)}
+
+/* bands + blocks */
+.band{padding:clamp(2.4rem,5vw,3.6rem) 0;border-top:1px solid var(--grid)}
+.band-head{margin-bottom:1.8rem} .band-head.split{display:flex;justify-content:space-between;align-items:flex-end;gap:1rem;flex-wrap:wrap}
+.band-head h2,.block-head h2{font-size:clamp(1.7rem,3.6vw,2.4rem);margin-top:.3rem}
+.block{padding:clamp(2.4rem,6vw,4rem) 0;border-top:1px solid var(--grid)} .block.pt0{border-top:none;padding-top:1.4rem}
+.block-head{margin-bottom:1.8rem;max-width:64ch}
+.sub{color:var(--muted);font-size:.98rem;margin:0}
+
+/* filters */
+.filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-top:1.1rem}
+.chip{font-family:var(--mono);font-size:.72rem;color:var(--muted);background:transparent;border:1px solid var(--grid);padding:.4rem .8rem;border-radius:20px;cursor:pointer;transition:.16s}
+.chip:hover{border-color:var(--scope);color:var(--ink)}
+.chip.active{background:var(--scope);color:var(--void);border-color:var(--scope);font-weight:600}
+
+/* generic cards */
+.grid{display:grid;gap:1rem}
+.owasp-grid{grid-template-columns:repeat(auto-fill,minmax(290px,1fr))}
+.cve-grid{grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.det-grid{grid-template-columns:repeat(auto-fill,minmax(360px,1fr))}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-radius:12px;padding:1.25rem;position:relative;overflow:hidden;transition:.2s}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--na)}
+.card.sev-critical::before{background:var(--critical)}.card.sev-high::before{background:var(--high)}.card.sev-medium::before{background:var(--medium)}.card.sev-low::before{background:var(--low)}
+.card:hover{transform:translateY(-3px);border-color:var(--grid-2);box-shadow:0 18px 40px -22px rgba(0,0,0,.8)}
+.card h3{font-size:1.12rem;margin-bottom:.3rem}.card .desc{color:var(--muted);font-size:.9rem;margin:.5rem 0}
+.sev-pill{font-family:var(--mono);font-size:.6rem;letter-spacing:.12em;padding:.22rem .5rem;border-radius:4px;font-weight:600;white-space:nowrap}
+.sev-pill.sev-critical{background:rgba(255,92,114,.16);color:var(--critical)}.sev-pill.sev-high{background:rgba(255,159,69,.16);color:var(--high)}
+.sev-pill.sev-medium{background:rgba(255,210,63,.16);color:var(--medium)}.sev-pill.sev-low{background:rgba(88,199,243,.16);color:var(--low)}.sev-pill.sev-na{background:rgba(93,111,140,.16);color:var(--na)}
+
+.card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.7rem}
+.rank{font-family:var(--mono);font-size:.95rem;font-weight:600;color:var(--scope)}
+.proto{font-family:var(--mono);font-size:.7rem;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin:.2rem 0 .5rem}
+.example{font-size:.82rem;color:var(--muted);background:rgba(255,255,255,.02);border:1px solid var(--grid);border-radius:7px;padding:.6rem .7rem;margin:.6rem 0}
+.example .lbl{font-family:var(--mono);font-size:.58rem;letter-spacing:.14em;color:var(--scope);display:block;margin-bottom:.2rem}
+details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);cursor:pointer;padding:.3rem 0}
+.mits{margin:.4rem 0;padding-left:1.1rem;font-size:.82rem;color:var(--muted)}.mits li{margin:.15rem 0}
+.tags{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.5rem}
+.tag,.mini{font-family:var(--mono);font-size:.62rem;color:var(--low);border:1px solid var(--grid);padding:.18rem .45rem;border-radius:5px}
+.cvss-bar{display:flex;align-items:center;gap:.5rem;margin-top:.9rem}
+.cvss-bar>span{height:5px;background:linear-gradient(90deg,var(--scope),var(--high));border-radius:3px;flex:0 0 auto;max-width:calc(100% - 3rem)}
+.cvss-bar b{font-family:var(--mono);font-size:.78rem;margin-left:auto;flex:0 0 auto}
+
+/* cve cards */
+.cve-head{display:flex;justify-content:space-between;align-items:center}
+.cve .own,.rcve .own,.feat-cve .own{font-family:var(--mono);font-size:.58rem;color:var(--scope);border:1px solid var(--scope);padding:.1rem .35rem;border-radius:4px;vertical-align:middle;margin-left:.3rem}
+.nvdtag{font-family:var(--mono);font-size:.56rem;color:var(--low);border:1px solid var(--low);padding:.08rem .3rem;border-radius:4px;vertical-align:middle;margin-left:.3rem;letter-spacing:.06em}
+.cve[data-fill="1"]{box-shadow:inset 0 0 0 1px rgba(52,229,196,.35)}
+.cve-title{font-size:.9rem;margin:.35rem 0 .7rem}
+.cve-meta{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .9rem;margin:0 0 .7rem}.cve-meta.wide{grid-template-columns:repeat(4,1fr)}
+.cve-meta div{border-bottom:1px solid var(--grid);padding-bottom:.25rem}
+.cve-meta dt{font-family:var(--mono);font-size:.56rem;letter-spacing:.1em;color:var(--faint)}
+.cve-meta dd{margin:0;font-size:.82rem;font-family:var(--mono)}
+.cve-desc{font-size:.84rem;color:var(--muted);margin:.2rem 0 .8rem}
+.cve-foot{display:flex;justify-content:space-between;align-items:center;font-family:var(--mono);font-size:.68rem}
+.cve-foot .by{color:var(--faint)}.cve-foot .refs a{color:var(--low);margin-left:.5rem}.cve-foot .refs a:hover{color:var(--scope)}
+.cve-controls{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;margin:0 0 1.4rem}
+#cve-search{font-family:var(--mono);font-size:.8rem;background:var(--panel);border:1px solid var(--grid);color:var(--ink);padding:.6rem .9rem;border-radius:8px;min-width:240px;flex:1}
+#cve-search:focus{outline:none;border-color:var(--scope)}
+.empty{font-family:var(--mono);color:var(--faint);text-align:center;padding:2rem}
+
+/* matrix */
+.matrix{display:flex;gap:.8rem;overflow-x:auto;padding-bottom:1rem}
+.col{flex:1 0 200px;min-width:200px}
+.col-head{display:flex;align-items:center;gap:.5rem;font-family:var(--disp);font-weight:600;font-size:.9rem;padding:.6rem .7rem;background:var(--panel);border:1px solid var(--grid);border-radius:8px;margin-bottom:.6rem}
+.col-head .ph{font-family:var(--mono);font-size:.7rem;color:var(--scope)}
+.cell{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-left:3px solid var(--na);border-radius:8px;padding:.7rem;margin-bottom:.55rem;display:flex;flex-direction:column;gap:.25rem;transition:.16s}
+.cell.sev-critical{border-left-color:var(--critical)}.cell.sev-high{border-left-color:var(--high)}.cell.sev-medium{border-left-color:var(--medium)}.cell.sev-low{border-left-color:var(--low)}
+.cell:hover{transform:translateX(2px);border-color:var(--grid-2)}
+.cell .tid{font-family:var(--mono);font-size:.64rem;color:var(--scope);letter-spacing:.04em}
+.cell .tname{font-weight:600;font-size:.9rem}.cell .tsum{font-size:.78rem;color:var(--muted)}
+.cell .tcves{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.2rem}
+
+/* detections */
+.det pre{background:#060a12;border:1px solid var(--grid);border-radius:8px;padding:.8rem;overflow-x:auto;margin:.6rem 0}
+.det code{font-family:var(--mono);font-size:.72rem;color:#bfe9dd;white-space:pre}
+.det-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.4rem}
+.engine{font-family:var(--mono);font-size:.66rem;font-weight:600;color:var(--void);background:var(--scope);padding:.2rem .5rem;border-radius:4px}
+.det-tactic{font-family:var(--mono);font-size:.66rem;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+
+/* home: featured cve */
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.feat-cve{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-radius:12px;padding:1.3rem;position:relative;overflow:hidden;transition:.2s;display:block}
+.feat-cve::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--na)}
+.feat-cve.sev-critical::before{background:var(--critical)}.feat-cve.sev-high::before{background:var(--high)}.feat-cve.sev-medium::before{background:var(--medium)}.feat-cve.sev-low::before{background:var(--low)}
+.feat-cve:hover{transform:translateY(-3px);border-color:var(--scope)}
+.feat-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
+.feat-top .cid{font-family:var(--mono);font-weight:600}
+.feat-t{font-size:1.05rem;font-family:var(--disp);font-weight:600;margin:.2rem 0 1rem;line-height:1.2}
+.feat-link{font-family:var(--mono);font-size:.74rem;color:var(--scope)}
+
+/* home: bento */
+.bento-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.bento{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-radius:14px;padding:1.4rem;transition:.2s;display:flex;flex-direction:column;gap:.4rem;min-height:190px}
+.bento.span2{grid-column:span 2}
+.bento:hover{transform:translateY(-3px);border-color:var(--scope);box-shadow:0 18px 40px -22px rgba(0,0,0,.8)}
+.bento-n{display:flex;align-items:baseline;gap:.5rem}
+.bento-n b{font-family:var(--mono);font-size:2rem;font-weight:600;color:var(--scope);line-height:1}
+.bento-n span{font-family:var(--mono);font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--faint)}
+.bento h3{font-size:1.15rem;margin-top:.3rem}.bento p{color:var(--muted);font-size:.88rem;margin:0;flex:1}
+.bento-go{font-family:var(--mono);font-size:.72rem;color:var(--scope)}
+
+/* home: nvd list */
+.nvd-list{display:flex;flex-direction:column;gap:.5rem}
+.nvd-row{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:.9rem;padding:.7rem 1rem;background:var(--panel);border:1px solid var(--grid);border-left:3px solid var(--na);border-radius:9px;transition:.16s}
+.nvd-row.sev-critical{border-left-color:var(--critical)}.nvd-row.sev-high{border-left-color:var(--high)}.nvd-row.sev-medium{border-left-color:var(--medium)}.nvd-row.sev-low{border-left-color:var(--low)}
+.nvd-row:hover{border-color:var(--grid-2);transform:translateX(2px)}
+.nr-id{font-family:var(--mono);font-size:.82rem;font-weight:600}
+.nr-prod{font-family:var(--mono);font-size:.74rem;color:var(--muted);text-align:right}
+
+/* home: about teaser */
+.about-teaser{text-align:center}
+.about-teaser h2{font-size:clamp(1.7rem,4vw,2.6rem);max-width:18ch;margin:.4rem auto .9rem}
+.about-teaser .lede{margin:0 auto 1.6rem}
+
+/* research page */
+.rcve-grid{display:grid;gap:1.2rem}
+.rcve{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-radius:14px;padding:1.5rem;position:relative;overflow:hidden}
+.rcve::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--na)}
+.rcve.sev-critical::before{background:var(--critical)}.rcve.sev-high::before{background:var(--high)}.rcve.sev-medium::before{background:var(--medium)}.rcve.sev-low::before{background:var(--low)}
+.rcve-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.5rem}
+.rcve-head .cid{font-family:var(--mono);font-weight:600;font-size:1.05rem}
+.rcve h3{font-size:1.4rem;margin:.2rem 0 1rem}
+.rcve-desc{color:var(--muted);margin:0 0 1rem}
+.teardown{background:#060a12;border:1px solid var(--grid);border-radius:9px;padding:1rem;margin-bottom:1rem}
+.teardown.pending{opacity:.7}
+.teardown .lbl{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--scope);display:block;margin-bottom:.4rem}
+.teardown p{margin:0;font-family:var(--mono);font-size:.82rem;color:#cfe0f2}
+.rcve-refs{display:flex;gap:.6rem;flex-wrap:wrap}
+.rcve-refs a{font-family:var(--mono);font-size:.72rem;color:var(--low)}.rcve-refs a:hover{color:var(--scope)}
+
+/* methodology */
+.methodology{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.mstep{display:flex;gap:.8rem;background:var(--panel);border:1px solid var(--grid);border-radius:12px;padding:1.2rem}
+.ms-n{font-family:var(--mono);font-size:1.1rem;font-weight:600;color:var(--scope)}
+.mstep h4{font-size:1rem;margin-bottom:.3rem}.mstep p{margin:0;color:var(--muted);font-size:.84rem}
+
+/* two col + lists */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.pub-list,.contrib-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:.7rem}
+.pub{display:flex;justify-content:space-between;align-items:center;gap:1rem;background:var(--panel);border:1px solid var(--grid);border-radius:9px;padding:.9rem 1rem}
+.pub-t{display:block;font-weight:600;font-size:.92rem}.pub-v{font-family:var(--mono);font-size:.72rem;color:var(--faint)}
+.pub a{font-family:var(--mono);font-size:.72rem;color:var(--scope);white-space:nowrap}
+.contrib-list li{background:var(--panel);border:1px solid var(--grid);border-left:3px solid var(--scope);border-radius:9px;padding:.8rem 1rem;color:var(--muted);font-size:.9rem}
+
+/* about: bio */
+.bio-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:start}
+.bio-lead{font-family:var(--disp);font-size:1.4rem;font-weight:600;line-height:1.3;margin:0 0 1rem;color:var(--ink)}
+.bio p{color:var(--muted)}
+.bio-side{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-radius:14px;padding:1.4rem;display:flex;flex-direction:column;gap:1rem}
+.bio-stat{display:flex;align-items:baseline;gap:.6rem;border-bottom:1px solid var(--grid);padding-bottom:.7rem}
+.bio-stat b{font-family:var(--mono);font-size:1.6rem;font-weight:600;color:var(--scope)}
+.bio-stat span{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+.contacts{display:flex;flex-direction:column;gap:.5rem;margin-top:.3rem}
+.contact-link{font-family:var(--mono);font-size:.8rem;color:var(--scope);padding:.5rem .7rem;border:1px solid var(--grid);border-radius:8px;transition:.16s}
+.contact-link:hover{border-color:var(--scope);background:rgba(52,229,196,.06)}
+
+/* about: focus */
+.focus-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
+.focus{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid var(--grid);border-radius:12px;padding:1.3rem;transition:.2s}
+.focus:hover{transform:translateY(-3px);border-color:var(--grid-2)}
+.focus-ic{color:var(--scope);display:inline-flex}.focus-ic .ic{width:26px;height:26px}
+.focus h3{font-size:1.05rem;margin:.7rem 0 .4rem}.focus p{margin:0;color:var(--muted);font-size:.85rem}
+
+/* about: skills */
+.skills-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:1.2rem}
+.skillgroup{background:var(--panel);border:1px solid var(--grid);border-radius:12px;padding:1.2rem}
+.skillgroup h4{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--scope);margin-bottom:.8rem}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem}
+.schip{font-family:var(--mono);font-size:.74rem;color:var(--ink);background:rgba(255,255,255,.03);border:1px solid var(--grid);padding:.35rem .65rem;border-radius:7px}
+
+/* about: timeline */
+.timeline{position:relative;padding-left:1.4rem}
+.timeline::before{content:"";position:absolute;left:4px;top:.4rem;bottom:.4rem;width:1px;background:var(--grid)}
+.tl-item{position:relative;margin-bottom:1.4rem}
+.tl-dot{position:absolute;left:-1.4rem;top:.35rem;width:9px;height:9px;border-radius:50%;background:var(--scope);box-shadow:0 0 0 4px rgba(52,229,196,.12)}
+.tl-top{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.tl-role{font-family:var(--disp);font-weight:600;font-size:1.05rem}
+.tl-period{font-family:var(--mono);font-size:.74rem;color:var(--faint)}
+.tl-org{font-family:var(--mono);font-size:.8rem;color:var(--scope)}
+.tl-body ul{margin:.5rem 0 0;padding-left:1.1rem;color:var(--muted);font-size:.88rem}
+
+/* about: education */
+.edu-list{display:flex;flex-direction:column;gap:.7rem}
+.edu{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:var(--panel);border:1px solid var(--grid);border-radius:9px;padding:.9rem 1rem}
+.edu-d{font-family:var(--disp);font-weight:600}.edu-s{font-family:var(--mono);font-size:.78rem;color:var(--faint)}
+
+/* footer */
+.foot{max-width:var(--maxw);margin:0 auto;padding:2.4rem clamp(1rem,4vw,2.4rem) 3rem;border-top:1px solid var(--grid)}
+.foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:.6rem;font-family:var(--mono);font-size:.7rem;color:var(--faint)}
+.foot a{color:var(--low)}
+.nvd-attr{font-family:var(--mono);font-size:.7rem;color:var(--faint);font-style:italic;border-top:1px solid var(--grid);padding-top:.9rem;margin:1rem 0 0}
+
+:focus-visible{outline:2px solid var(--scope);outline-offset:2px;border-radius:4px}
+
+/* reveal animation */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:900px){
+  .bento-grid,.methodology,.focus-grid{grid-template-columns:repeat(2,1fr)}
+  .bento.span2{grid-column:span 2}
+}
+@media(max-width:860px){
+  .menu-btn{display:block}
+  .nav{display:none;position:absolute;top:100%;left:0;right:0;flex-direction:column;background:rgba(7,11,20,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--grid);padding:.6rem clamp(1rem,4vw,2.4rem) 1rem;gap:.1rem}
+  .nav.open{display:flex}
+  .nav a{padding:.7rem .5rem}
+  .ghbtn{display:none}
+  .hero-grid{grid-template-columns:1fr}.scope{max-width:380px;margin:0 auto;order:-1}
+  .feat-grid,.two-col,.bio-grid,.skills-grid{grid-template-columns:1fr}
+  .nvd-row{grid-template-columns:auto 1fr;row-gap:.3rem}.nr-prod{text-align:left;grid-column:1/-1}
+}
+@media(max-width:480px){
+  .hero-stats{grid-template-columns:repeat(2,1fr);gap:1.2rem}
+  .bento-grid,.methodology,.focus-grid{grid-template-columns:1fr}.bento.span2{grid-column:span 1}
+  .cve-meta.wide{grid-template-columns:1fr 1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}.sweep,.blip .ping{animation:none}.sweep path{opacity:.1}
+  .reveal{opacity:1;transform:none;transition:none}*{transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="scanline" aria-hidden="true"></div>
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&#9670;</span>DroneSecKB<span class="ver">v2.0.0</span></a>
+  <button class="menu-btn" aria-label="Menu" aria-expanded="false">&#9776;</button>
+  <nav class="nav"><a href="index.html">Home</a><a href="knowledge.html">Knowledge Base</a><a href="cves.html" class="active">CVE Register</a><a href="research.html">Research</a><a href="about.html">About</a></nav>
+  <a class="ghbtn" href="https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base" target="_blank" rel="noopener">GitHub &#8599;</a>
+</header>
+<main>
+<section class="phead reveal">
+  <p class="eyebrow">23 RECORDS · 5 CRITICAL · 4 HIGH · 14 VIA NVD</p>
+  <h1>CVE Register</h1>
+  <p class="phead-sub">Curated UAS vulnerabilities with CVSS, CWE, and mapping. Records auto-ingested from the NVD API are tagged NVD; entries credited to the maintainer are marked with a star.</p>
+</section>
+<section class="block pt0">
+  <div class="cve-controls">
+    <input id="cve-search" type="search" placeholder="Search CVE, product, vendor..." aria-label="Search CVEs">
+    <div class="filters" data-target="cve"><button class="chip active" data-sev="all">All</button><button class="chip" data-sev="critical">Critical</button><button class="chip" data-sev="high">High</button><button class="chip" data-sev="medium">Medium</button><button class="chip" data-sev="low">Low</button></div>
+  </div>
+  <div class="grid cve-grid" id="cve-grid"><article class="card cve sev-critical"
+      data-sev="critical" data-q="CVE-2024-6422 Consumer UAV: Unauthenticated Telnet Root Access multiple consumer uav models">
+      <div class="cve-head"><h3>CVE-2024-6422</h3><span class="sev-pill sev-critical">CRITICAL</span></div>
+      <p class="cve-title">Consumer UAV: Unauthenticated Telnet Root Access</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-306</dd></div>
+        <div><dt>PRODUCT</dt><dd>Multiple consumer UAV models</dd></div>
+        <div><dt>STATUS</dt><dd>Vendor Notified</dd></div>
+      </dl>
+      <p class="cve-desc">An unauthenticated remote attacker on the drone&#x27;s Wi-Fi can reach an open Telnet service on port 23 that drops to a BusyBox root shell, allowing arbitrary read, modification, and process control on the airframe.</p>
+      <div class="cve-foot"><span class="by">Third party</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-6422" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-critical"
+      data-sev="critical" data-q="CVE-2026-1579 The MAVLink communication protocol does not require cryptographic 
+authentication by defau… px4 autopilot">
+      <div class="cve-head"><h3>CVE-2026-1579 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-critical">CRITICAL</span></div>
+      <p class="cve-title">The MAVLink communication protocol does not require cryptographic 
+authentication by defau…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.3</dd></div>
+        <div><dt>CWE</dt><dd>CWE-306</dd></div>
+        <div><dt>PRODUCT</dt><dd>px4 autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">The MAVLink communication protocol does not require cryptographic 
+authentication by default. When MAVLink 2.0 message signing is not 
+enabled, any message -- including SERIAL_CONTROL, which provides 
+interactive shell access -- can be sent by an unauthenticated party with
+ access to the MAVLink interface. PX4 provides MAVLink 2.0 message 
+signing as the cryptographic authentication mechanism for all MAVLink 
+communication. When signing is enabled, unsigned messages are rejected 
+at the protocol level.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-1579" target="_blank" rel="noopener">ref</a><a href="https://docs.px4.io/main/en/mavlink/message_signing" target="_blank" rel="noopener">ref</a><a href="https://docs.px4.io/main/en/mavlink/security_hardening" target="_blank" rel="noopener">ref</a><a href="https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-090-02.json" target="_blank" rel="noopener">ref</a><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-090-02" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-critical"
+      data-sev="critical" data-q="CVE-2025-41108 The communication protocol implemented in Ghost Robotics Vision 60 v0.27.2 could allow an … ghostrobotics vision 60 firmware">
+      <div class="cve-head"><h3>CVE-2025-41108 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-critical">CRITICAL</span></div>
+      <p class="cve-title">The communication protocol implemented in Ghost Robotics Vision 60 v0.27.2 could allow an …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.2</dd></div>
+        <div><dt>CWE</dt><dd>CWE-287</dd></div>
+        <div><dt>PRODUCT</dt><dd>ghostrobotics vision 60 firmware</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">The communication protocol implemented in Ghost Robotics Vision 60 v0.27.2 could allow an attacker to send commands to the robot from an external attack station, impersonating the control station (tablet) and gaining unauthorised full control of the robot. The absence of encryption and authentication mechanisms in the communication protocol allows an attacker to capture legitimate traffic between the robot and the controller, replicate it, and send any valid command to the robot from any attacking computer or device. The communication protocol used in this interface is based on MAVLink, a widely documented protocol, which increases the likelihood of attack. There are two methods for connecting to the robot remotely: Wi-Fi and 4G/LTE.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-41108" target="_blank" rel="noopener">ref</a><a href="https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-ghost-robotics-vision-60" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-critical"
+      data-sev="critical" data-q="CVE-2020-10283 The Micro Air Vehicle Link (MAVLink) protocol presents authentication mechanisms on its ve… dronecode micro air vehicle link">
+      <div class="cve-head"><h3>CVE-2020-10283 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-critical">CRITICAL</span></div>
+      <p class="cve-title">The Micro Air Vehicle Link (MAVLink) protocol presents authentication mechanisms on its ve…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-288</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode micro air vehicle link</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">The Micro Air Vehicle Link (MAVLink) protocol presents authentication mechanisms on its version 2.0 however according to its documentation, in order to maintain backwards compatibility, GCS and autopilot negotiate the version via the AUTOPILOT_VERSION message. Since this negotiation depends on the answer, an attacker may craft packages in a way that hints the autopilot to adopt version 1.0 of MAVLink for the communication. Given the lack of authentication capabilities in such version of MAVLink (refer to CVE-2020-10282), attackers may use this method to bypass authentication capabilities and interact with the autopilot directly.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-10283" target="_blank" rel="noopener">ref</a><a href="https://github.com/aliasrobotics/RVD/issues/3316" target="_blank" rel="noopener">ref</a><a href="https://github.com/aliasrobotics/RVD/issues/3316" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-critical"
+      data-sev="critical" data-q="CVE-2020-10282 The Micro Air Vehicle Link (MAVLink) protocol presents no authentication mechanism on its … dronecode micro air vehicle link">
+      <div class="cve-head"><h3>CVE-2020-10282 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-critical">CRITICAL</span></div>
+      <p class="cve-title">The Micro Air Vehicle Link (MAVLink) protocol presents no authentication mechanism on its …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-306</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode micro air vehicle link</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">The Micro Air Vehicle Link (MAVLink) protocol presents no authentication mechanism on its version 1.0 (nor authorization) whichs leads to a variety of attacks including identity spoofing, unauthorized access, PITM attacks and more. According to literature, version 2.0 optionally allows for package signing which mitigates this flaw. Another source mentions that MAVLink 2.0 only provides a simple authentication system based on HMAC. This implies that the flying system overall should add the same symmetric key into all devices of network. If not the case, this may cause a security issue, that if one of the devices and its symmetric key are compromised, the whole authentication system is not reliable.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-10282" target="_blank" rel="noopener">ref</a><a href="https://github.com/rligocki/Diploma_thesis_px4" target="_blank" rel="noopener">ref</a><a href="https://github.com/rligocki/Diploma_thesis_px4" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-high"
+      data-sev="high" data-q="CVE-2024-52876 Holy Stone Remote ID Module: Unauthenticated Remote Power-Off holy stone remote id module hsrid01">
+      <div class="cve-head"><h3>CVE-2024-52876</h3><span class="sev-pill sev-high">HIGH</span></div>
+      <p class="cve-title">Holy Stone Remote ID Module: Unauthenticated Remote Power-Off</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>7.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-125</dd></div>
+        <div><dt>PRODUCT</dt><dd>Holy Stone Remote ID Module HSRID01</dd></div>
+        <div><dt>STATUS</dt><dd>Patched</dd></div>
+      </dl>
+      <p class="cve-desc">In broadcast mode the Remote ID module can be powered off by an unauthenticated Bluetooth peer issuing repeated reads against the ASTM Remote ID (0xFFFA) GATT characteristic, triggering an out-of-bounds read and fault.</p>
+      <div class="cve-foot"><span class="by">Coalfire</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-52876" target="_blank" rel="noopener">ref</a><a href="https://coalfire.com/the-coalfire-blog/holy-stone-remote-id-vulnerability-disclosure" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-high"
+      data-sev="high" data-q="CVE-2023-51454 DJI Mavic 3: vtwo_sdk Memory Corruption (DUML) dji mavic 3 (vtwo_sdk service)">
+      <div class="cve-head"><h3>CVE-2023-51454</h3><span class="sev-pill sev-high">HIGH</span></div>
+      <p class="cve-title">DJI Mavic 3: vtwo_sdk Memory Corruption (DUML)</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-787</dd></div>
+        <div><dt>PRODUCT</dt><dd>DJI Mavic 3 (vtwo_sdk service)</dd></div>
+        <div><dt>STATUS</dt><dd>Patched</dd></div>
+      </dl>
+      <p class="cve-desc">Memory corruption in the vtwo_sdk service reachable over the DUML protocol, one of a cluster of issues surfaced by protocol fuzzing of DJI airframes.</p>
+      <div class="cve-foot"><span class="by">NDSS 2023 / DUML fuzzing</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-51454" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-high"
+      data-sev="high" data-q="CVE-2024-33844 The &#x27;control&#x27; in Parrot ANAFI USA firmware 1.10.4 does not check the MAV_MISSION_TYPE(0, 1… parrot anafi firmware">
+      <div class="cve-head"><h3>CVE-2024-33844 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-high">HIGH</span></div>
+      <p class="cve-title">The &#x27;control&#x27; in Parrot ANAFI USA firmware 1.10.4 does not check the MAV_MISSION_TYPE(0, 1…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>7.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-404</dd></div>
+        <div><dt>PRODUCT</dt><dd>parrot anafi firmware</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">The &#x27;control&#x27; in Parrot ANAFI USA firmware 1.10.4 does not check the MAV_MISSION_TYPE(0, 1, 2, 255), which allows attacker to cut off the connection between a controller and the drone by sending MAVLink MISSION_COUNT command with a wrong MAV_MISSION_TYPE.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-33844" target="_blank" rel="noopener">ref</a><a href="http://anafi.com" target="_blank" rel="noopener">ref</a><a href="http://nvd-cwe-other.com" target="_blank" rel="noopener">ref</a><a href="https://forum.developer.parrot.com/t/cve-2024-33844-bugs-in-anafi-thermal-usa-firmware/22501" target="_blank" rel="noopener">ref</a><a href="https://forum.developer.parrot.com/t/cve-2024-33844-bugs-in-anafi-thermal-usa-firmware/22501/1" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-high"
+      data-sev="high" data-q="CVE-2020-10281 This vulnerability applies to the Micro Air Vehicle Link (MAVLink) protocol and allows a r… dronecode micro air vehicle link">
+      <div class="cve-head"><h3>CVE-2020-10281 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-high">HIGH</span></div>
+      <p class="cve-title">This vulnerability applies to the Micro Air Vehicle Link (MAVLink) protocol and allows a r…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>7.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-319</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode micro air vehicle link</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">This vulnerability applies to the Micro Air Vehicle Link (MAVLink) protocol and allows a remote attacker to gain access to sensitive information provided it has access to the communication medium. MAVLink is a header-based protocol that does not perform encryption to improve transfer (and reception speed) and efficiency by design. The increasing popularity of the protocol (used accross different autopilots) has led to its use in wired and wireless mediums through insecure communication channels exposing sensitive information to a remote attacker with ability to intercept network traffic.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-10281" target="_blank" rel="noopener">ref</a><a href="https://docs.google.com/document/d/1XtbD0ORNkhZ8eKrsbSIZNLyg9sFRXMXbsR2mp37KbIg/edit" target="_blank" rel="noopener">ref</a><a href="https://docs.google.com/document/d/1XtbD0ORNkhZ8eKrsbSIZNLyg9sFRXMXbsR2mp37KbIg/edit" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2023-6951 DJI Mavic 3: Weak QuickTransfer Wi-Fi Key Generation dji mavic 3 series (quicktransfer mode)">
+      <div class="cve-head"><h3>CVE-2023-6951</h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">DJI Mavic 3: Weak QuickTransfer Wi-Fi Key Generation</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.6</dd></div>
+        <div><dt>CWE</dt><dd>CWE-334</dd></div>
+        <div><dt>PRODUCT</dt><dd>DJI Mavic 3 series (QuickTransfer mode)</dd></div>
+        <div><dt>STATUS</dt><dd>Patched</dd></div>
+      </dl>
+      <p class="cve-desc">QuickTransfer Wi-Fi passwords are an 8-character hex string derived from libc random() seeded weakly, giving a small key space that a remote attacker can derive to join the network and potentially decrypt traffic.</p>
+      <div class="cve-foot"><span class="by">Nozomi Networks</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-6951" target="_blank" rel="noopener">ref</a><a href="https://www.nozominetworks.com/labs/vulnerability-advisories-cve-2023-6951/" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2023-51455 DJI Mavic 3: vtwo_sdk Memory Corruption (variant) dji mavic 3 (vtwo_sdk service)">
+      <div class="cve-head"><h3>CVE-2023-51455</h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">DJI Mavic 3: vtwo_sdk Memory Corruption (variant)</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-787</dd></div>
+        <div><dt>PRODUCT</dt><dd>DJI Mavic 3 (vtwo_sdk service)</dd></div>
+        <div><dt>STATUS</dt><dd>Patched</dd></div>
+      </dl>
+      <p class="cve-desc">A second memory-corruption path in vtwo_sdk reachable via DUML, distinct from CVE-2023-51454.</p>
+      <div class="cve-foot"><span class="by">NDSS 2023 / DUML fuzzing</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-51455" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2023-51456 DJI Mavic 3: vtwo_sdk Memory Corruption (variant) dji mavic 3 (vtwo_sdk service)">
+      <div class="cve-head"><h3>CVE-2023-51456</h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">DJI Mavic 3: vtwo_sdk Memory Corruption (variant)</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-787</dd></div>
+        <div><dt>PRODUCT</dt><dd>DJI Mavic 3 (vtwo_sdk service)</dd></div>
+        <div><dt>STATUS</dt><dd>Patched</dd></div>
+      </dl>
+      <p class="cve-desc">A third DUML-reachable memory-corruption path in vtwo_sdk.</p>
+      <div class="cve-foot"><span class="by">NDSS 2023 / DUML fuzzing</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-51456" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2026-32743 PX4 is an open-source autopilot stack for drones and unmanned vehicles. Versions 1.17.0-rc… dronecode px4 drone autopilot">
+      <div class="cve-head"><h3>CVE-2026-32743 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">PX4 is an open-source autopilot stack for drones and unmanned vehicles. Versions 1.17.0-rc…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-121</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 is an open-source autopilot stack for drones and unmanned vehicles. Versions 1.17.0-rc2 and below are vulnerable to Stack-based Buffer Overflow through the MavlinkLogHandler, and are triggered via MAVLink log request. The LogEntry.filepath buffer is 60 bytes, but the sscanf function parses paths from the log list file with no width specifier, allowing a path longer than 60 characters to overflow the buffer. An attacker with MAVLink link access can trigger this by first creating deeply nested directories via MAVLink FTP, then requesting the log list. The flight controller MAVLink task crashes, losing telemetry and command capability and causing DoS. This issue has been fixed in this commit: https://github.com/PX4/PX4-Autopilot/commit/616b25a280e229c24d5cf12a03dbf248df89c474.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32743" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/commit/616b25a280e229c24d5cf12a03dbf248df89c474" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-97c4-68r9-96p5" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2026-32724 PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc1, a heap-use-aft… dronecode px4 drone autopilot">
+      <div class="cve-head"><h3>CVE-2026-32724 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc1, a heap-use-aft…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>5.3</dd></div>
+        <div><dt>CWE</dt><dd>CWE-416</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc1, a heap-use-after-free is detected in the MavlinkShell::available() function. The issue is caused by a race condition between the MAVLink receiver thread (which handles shell creation/destruction) and the telemetry sender thread (which polls the shell for available output). The issue is remotely triggerable via MAVLink SERIAL_CONTROL messages (ID 126), which can be sent by an external ground station or automated script. This vulnerability is fixed in 1.17.0-rc1.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32724" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-j5w2-w79c-mqrw" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2026-32713 PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, A logic error … dronecode px4 drone autopilot">
+      <div class="cve-head"><h3>CVE-2026-32713 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, A logic error …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>4.3</dd></div>
+        <div><dt>CWE</dt><dd>CWE-670</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, A logic error in the PX4 Autopilot MAVLink FTP session validation uses incorrect boolean logic (&amp;&amp; instead of ||), allowing BurstReadFile and WriteFile operations to proceed with invalid sessions or closed file descriptors. This enables an unauthenticated attacker to put the FTP subsystem into an inconsistent state, trigger operations on invalid file descriptors, and bypass session isolation checks. This vulnerability is fixed in 1.17.0-rc2.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32713" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-pp2c-jr5g-6f2m" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2026-32709 PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, An unauthentic… dronecode px4 drone autopilot">
+      <div class="cve-head"><h3>CVE-2026-32709 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, An unauthentic…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>5.4</dd></div>
+        <div><dt>CWE</dt><dd>CWE-22</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, An unauthenticated path traversal vulnerability in the PX4 Autopilot MAVLink FTP implementation allows any MAVLink peer to read, write, create, delete, and rename arbitrary files on the flight controller filesystem without authentication. On NuttX targets, the FTP root directory is an empty string, meaning attacker-supplied paths are passed directly to filesystem syscalls with no prefix or sanitization for read operations. On POSIX targets (Linux companion computers, SITL), the write-path validation function unconditionally returns true, providing no protection. A TOCTOU race condition in the write validation on NuttX further allows bypassing the only existing guard. This vulnerability is fixed in 1.17.0-rc2.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32709" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-fh32-qxj9-x32f" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2025-5640 A vulnerability was found in PX4-Autopilot 1.12.3. It has been classified as problematic. … see nvd">
+      <div class="cve-head"><h3>CVE-2025-5640 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">A vulnerability was found in PX4-Autopilot 1.12.3. It has been classified as problematic. …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>4.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-119</dd></div>
+        <div><dt>PRODUCT</dt><dd>See NVD</dd></div>
+        <div><dt>STATUS</dt><dd>Deferred</dd></div>
+      </dl>
+      <p class="cve-desc">A vulnerability was found in PX4-Autopilot 1.12.3. It has been classified as problematic. This affects the function MavlinkReceiver::handle_message_trajectory_representation_waypoints of the file mavlink_receiver.cpp of the component TRAJECTORY_REPRESENTATION_WAYPOINTS Message Handler. The manipulation leads to stack-based buffer overflow. Local access is required to approach this attack. The exploit has been disclosed to the public and may be used.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-5640" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/24915" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/24915#issue-3091040552" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?ctiid.311127" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?id.311127" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2025-15150 A vulnerability was found in PX4 PX4-Autopilot up to 1.16.0. Affected by this issue is the… dronecode px4 drone autopilot">
+      <div class="cve-head"><h3>CVE-2025-15150 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">A vulnerability was found in PX4 PX4-Autopilot up to 1.16.0. Affected by this issue is the…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>4.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-119</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">A vulnerability was found in PX4 PX4-Autopilot up to 1.16.0. Affected by this issue is the function MavlinkLogHandler::state_listing/MavlinkLogHandler::log_entry_from_id of the file src/modules/mavlink/mavlink_log_handler.cpp. The manipulation results in stack-based buffer overflow. The attack is only possible with local access. The patch is identified as 338595edd1d235efd885fd5e9f45e7f9dcf4013d. It is best practice to apply a patch to resolve this issue.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-15150" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/26118" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/26124" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/26124/commits/338595edd1d235efd885fd5e9f45e7f9dcf4013d" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?ctiid.338527" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-medium"
+      data-sev="medium" data-q="CVE-2024-38951 A buffer overflow in PX4-Autopilot v1.12.3 allows attackers to cause a Denial of Service (… dronecode px4 drone autopilot">
+      <div class="cve-head"><h3>CVE-2024-38951 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-medium">MEDIUM</span></div>
+      <p class="cve-title">A buffer overflow in PX4-Autopilot v1.12.3 allows attackers to cause a Denial of Service (…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-120</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">A buffer overflow in PX4-Autopilot v1.12.3 allows attackers to cause a Denial of Service (DoS) via a crafted MavLink message.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-38951" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/23251" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/23251" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-low"
+      data-sev="low" data-q="CVE-2023-6948 DJI Mavic 3: Information Disclosure dji mavic 3 series">
+      <div class="cve-head"><h3>CVE-2023-6948</h3><span class="sev-pill sev-low">LOW</span></div>
+      <p class="cve-title">DJI Mavic 3: Information Disclosure</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>3.0</dd></div>
+        <div><dt>CWE</dt><dd>CWE-200</dd></div>
+        <div><dt>PRODUCT</dt><dd>DJI Mavic 3 series</dd></div>
+        <div><dt>STATUS</dt><dd>Patched</dd></div>
+      </dl>
+      <p class="cve-desc">Low-severity information exposure in the Mavic 3 series reported alongside the Nozomi Mavic 3 research.</p>
+      <div class="cve-foot"><span class="by">Nozomi Networks</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-6948" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-low"
+      data-sev="low" data-q="CVE-2025-9020 A vulnerability was found in PX4 PX4-Autopilot up to 1.15.4. This issue affects the functi… see nvd">
+      <div class="cve-head"><h3>CVE-2025-9020 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3><span class="sev-pill sev-low">LOW</span></div>
+      <p class="cve-title">A vulnerability was found in PX4 PX4-Autopilot up to 1.15.4. This issue affects the functi…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>2.0</dd></div>
+        <div><dt>CWE</dt><dd>CWE-119</dd></div>
+        <div><dt>PRODUCT</dt><dd>See NVD</dd></div>
+        <div><dt>STATUS</dt><dd>Deferred</dd></div>
+      </dl>
+      <p class="cve-desc">A vulnerability was found in PX4 PX4-Autopilot up to 1.15.4. This issue affects the function MavlinkReceiver::handle_message_serial_control of the file src/modules/mavlink/mavlink_receiver.cpp of the component Mavlink Shell Closing Handler. The manipulation of the argument _mavlink_shell leads to use after free. An attack has to be approached locally. The complexity of an attack is rather high. The exploitation is known to be difficult. The identifier of the patch is 4395d4f00c49b888f030f5b43e2a779f1fa78708. It is recommended to apply a patch to fix this issue.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-9020" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/25046" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/25082" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/25082/commits/4395d4f00c49b888f030f5b43e2a779f1fa78708" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?ctiid.320081" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-na" data-fill="1"
+      data-sev="fill_me: critical | high | medium | low" data-q="CVE-2023-49199  fill_me: affected device/firmware">
+      <div class="cve-head"><h3>CVE-2023-49199 <span class="own" title="Credited to the maintainer">&#9733; OWN</span></h3><span class="sev-pill sev-na">n/a</span></div>
+      <p class="cve-title"></p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>n/a</dd></div>
+        <div><dt>CWE</dt><dd>n/a</dd></div>
+        <div><dt>PRODUCT</dt><dd>n/a</dd></div>
+        <div><dt>STATUS</dt><dd>n/a</dd></div>
+      </dl>
+      <p class="cve-desc">Teardown detail coming soon.</p>
+      <div class="cve-foot"><span class="by">Sandesh More</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-49199" target="_blank" rel="noopener">ref</a></span></div>
+    </article><article class="card cve sev-na" data-fill="1"
+      data-sev="fill_me: critical | high | medium | low" data-q="CVE-2023-49200  fill_me">
+      <div class="cve-head"><h3>CVE-2023-49200 <span class="own" title="Credited to the maintainer">&#9733; OWN</span></h3><span class="sev-pill sev-na">n/a</span></div>
+      <p class="cve-title"></p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>n/a</dd></div>
+        <div><dt>CWE</dt><dd>n/a</dd></div>
+        <div><dt>PRODUCT</dt><dd>n/a</dd></div>
+        <div><dt>STATUS</dt><dd>n/a</dd></div>
+      </dl>
+      <p class="cve-desc">Teardown detail coming soon.</p>
+      <div class="cve-foot"><span class="by">Sandesh More</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-49200" target="_blank" rel="noopener">ref</a></span></div>
+    </article></div>
+  <p class="empty" id="cve-empty" hidden>No records match that filter.</p>
+</section></main>
+<footer class="foot">
+  <div class="foot-row">
+    <span>DroneSecKB v2.0.0 &middot; built 2026-06-12</span>
+    <span>Data: <a href="https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base" target="_blank" rel="noopener">/data on GitHub</a> &middot; educational use, authorized testing only</span>
+  </div>
+  <p class="nvd-attr">This product uses the NVD API but is not endorsed or certified by the NVD.</p>
+</footer>
+<script>// reduced motion
+var reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+// count-up stats
+function countUp(el){
+  var target = +el.dataset.count, dur = 900, t0 = performance.now();
+  function step(t){ var p = Math.min((t-t0)/dur,1);
+    el.textContent = Math.round(target*(1-Math.pow(1-p,3)));
+    if(p<1) requestAnimationFrame(step); }
+  requestAnimationFrame(step);
+}
+function runCounts(){
+  document.querySelectorAll('b[data-count]').forEach(function(el){
+    if(el.dataset.done) return;
+    if(reduce){ el.textContent = el.dataset.count; el.dataset.done='1'; return; }
+    el.dataset.done='1'; countUp(el);
+  });
+}
+
+// reveal on scroll
+if(!reduce && 'IntersectionObserver' in window){
+  var revObs = new IntersectionObserver(function(es){
+    es.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); revObs.unobserve(en.target);
+      en.target.querySelectorAll('b[data-count]').forEach(function(el){ if(!el.dataset.done){ el.dataset.done='1'; countUp(el); } });
+    }});
+  },{rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.reveal').forEach(function(el){ revObs.observe(el); });
+} else {
+  document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+}
+runCounts();
+
+// severity filters + search
+var search = document.getElementById('cve-search');
+function activeSev(target){
+  var g = document.querySelector('.filters[data-target="'+target+'"] .chip.active');
+  return g ? g.dataset.sev : 'all';
+}
+function applyFilters(target){
+  if(target === 'owasp'){
+    var sev = activeSev('owasp');
+    document.querySelectorAll('#owasp-grid .card').forEach(function(c){
+      c.style.display = (sev==='all'||c.dataset.sev===sev) ? '' : 'none';
+    });
+  } else {
+    var sev = activeSev('cve'), q = (search?search.value:'').trim().toLowerCase(), shown = 0;
+    document.querySelectorAll('#cve-grid .card').forEach(function(c){
+      var ok = (sev==='all'||c.dataset.sev===sev) && (!q || c.dataset.q.indexOf(q)>-1);
+      c.style.display = ok ? '' : 'none'; if(ok) shown++;
+    });
+    var empty = document.getElementById('cve-empty'); if(empty) empty.hidden = shown>0;
+  }
+}
+document.querySelectorAll('.filters').forEach(function(group){
+  var target = group.dataset.target;
+  group.addEventListener('click', function(e){
+    var btn = e.target.closest('.chip'); if(!btn) return;
+    group.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('active'); });
+    btn.classList.add('active'); applyFilters(target);
+  });
+});
+if(search) search.addEventListener('input', function(){ applyFilters('cve'); });
+
+// mobile menu
+var menuBtn = document.querySelector('.menu-btn'), nav = document.querySelector('.nav');
+if(menuBtn && nav){
+  menuBtn.addEventListener('click', function(){
+    var open = nav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+}
+</script>
+</body>
+</html>

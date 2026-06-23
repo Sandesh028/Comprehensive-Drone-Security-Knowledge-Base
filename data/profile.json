@@ -1,0 +1,46 @@
+{
+  "headline": "I break unmanned aircraft so they can be built to survive.",
+  "bio_short": "UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.",
+  "bio_long": "FILL_ME: 3 to 5 sentences in your own voice. Who you are, what you research, why drone security, and where you want to go next (DevSecOps / security engineering). This is the heart of the About page, so write it yourself.",
+  "available_for": "DevSecOps and security engineering roles",
+  "location": "FILL_ME: City, Country (or 'Remote')",
+  "focus_areas": [
+    { "name": "RF & Link Security", "icon": "rf", "summary": "MAVLink, OcuSync, Remote ID, and the unencrypted-by-default reality of drone control links." },
+    { "name": "Firmware & Embedded", "icon": "chip", "summary": "Debug-port access, firmware extraction, and control-protocol memory safety (DUML and friends)." },
+    { "name": "Onboard Network", "icon": "net", "summary": "Exposed Telnet/RTSP/HTTP services on the airframe AP, and the auth that should have been there." },
+    { "name": "Detection Engineering", "icon": "shield", "summary": "Turning offensive findings into shippable Suricata, Zeek, and YARA content defenders can deploy." }
+  ],
+  "skills": [
+    { "group": "Vulnerability Research", "items": ["UAS / drone security", "Firmware reverse engineering", "Protocol fuzzing", "CVE disclosure"] },
+    { "group": "Embedded & RF", "items": ["JTAG / SWD / UART", "SDR basics", "MAVLink", "Remote ID / Open Drone ID"] },
+    { "group": "Detection & Defense", "items": ["Suricata", "Zeek", "YARA", "Threat modeling"] },
+    { "group": "Engineering", "items": ["Python", "GitHub Actions / CI-CD", "Static site tooling", "Cloudflare Pages"] }
+  ],
+  "experience": [
+    {
+      "role": "FILL_ME: Role title",
+      "org": "FILL_ME: Organization",
+      "period": "FILL_ME: 20XX - present",
+      "points": [
+        "FILL_ME: Action-Context-Result bullet with a number in it.",
+        "FILL_ME: second bullet."
+      ]
+    },
+    {
+      "role": "FILL_ME: Previous role",
+      "org": "FILL_ME: Organization",
+      "period": "FILL_ME: 20XX - 20XX",
+      "points": ["FILL_ME: bullet."]
+    }
+  ],
+  "education": [
+    { "degree": "FILL_ME: Degree, field", "school": "FILL_ME: University", "period": "FILL_ME: 20XX - 20XX" }
+  ],
+  "contact": {
+    "email": "FILL_ME: you@domain.com",
+    "github": "https://github.com/Sandesh028",
+    "portfolio": "FILL_ME: https://sandeshmore.me",
+    "linkedin": "FILL_ME: https://www.linkedin.com/in/...",
+    "orcid": "FILL_ME: 0000-0000-0000-0000"
+  }
+}

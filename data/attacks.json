@@ -1,5 +1,5 @@
 {
-  "schema_note": "UAS-native taxonomy. Technique IDs are domain-specific (UAS-<DOMAIN>-NNN). Enterprise ATT&CK analogs are listed as informational cross-references only — they are NOT claimed as exact mappings, which was the prior error.",
+  "schema_note": "UAS-native taxonomy. Technique IDs are domain-specific (UAS-<DOMAIN>-NNN). Enterprise ATT&CK analogs are listed as informational cross-references only: they are NOT claimed as exact mappings, which was the prior error.",
   "tactics": [
     { "id": "T1", "phase": 1, "name": "Reconnaissance", "summary": "Locate and fingerprint the airframe, links, and operator." },
     { "id": "T2", "phase": 2, "name": "Initial Access", "summary": "Reach a control or service surface on the airframe." },
@@ -13,7 +13,7 @@
       "id": "UAS-RF-001", "name": "Wi-Fi Key Recovery / Deauth", "domain": "RF", "tacticId": "T3",
       "severity": "high",
       "summary": "Recover a weak link key or deauthenticate the operator to take over the control Wi-Fi.",
-      "enterpriseAnalog": "informational: T1557 (AiTM) — not an exact map",
+      "enterpriseAnalog": "informational: T1557 (AiTM): not an exact map",
       "relatedCves": ["CVE-2023-6951"]
     },
     {
@@ -34,7 +34,7 @@
       "id": "UAS-NAV-001", "name": "GNSS Spoofing", "domain": "NAV", "tacticId": "T4",
       "severity": "high",
       "summary": "Transmit counterfeit GNSS signals to mislead position.",
-      "enterpriseAnalog": "informational: no clean enterprise analog — UAS-specific",
+      "enterpriseAnalog": "informational: no clean enterprise analog: UAS-specific",
       "relatedCves": []
     },
     {
@@ -48,7 +48,7 @@
       "id": "UAS-NAV-003", "name": "IMU / Sensor Manipulation", "domain": "NAV", "tacticId": "T4",
       "severity": "high",
       "summary": "Acoustic or EM interference with inertial sensors to destabilize flight.",
-      "enterpriseAnalog": "informational: no clean enterprise analog — UAS-specific",
+      "enterpriseAnalog": "informational: no clean enterprise analog: UAS-specific",
       "relatedCves": []
     },
     {

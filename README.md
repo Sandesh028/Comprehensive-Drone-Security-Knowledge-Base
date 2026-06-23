@@ -1,86 +1,86 @@
-# DroneSecKB — An Open UAV Cybersecurity Reference
+# DroneSecKB
 
-A maintained reference for unmanned-aircraft-system (UAS) security: the OWASP
-Drone Top 10, a curated CVE register, a **UAS-native attack taxonomy**, defensive
-controls, and shippable **detection signatures**.
+An open UAV cybersecurity platform: the OWASP Drone Top 10, a curated CVE
+register fed live from the NVD API, a UAS-native attack taxonomy, defensive
+controls, shippable detection signatures, and a research profile.
 
 **Live:** https://drone-security-kb.smore2022.workers.dev
-**Maintainer:** Sandesh More — credited on CVE-2023-49199 and CVE-2023-49200.
+**Maintainer:** Sandesh More, credited on CVE-2023-49199 and CVE-2023-49200.
 
----
+## Pages
 
-## What's in here
+The site builds into five prerendered pages that share one design system:
 
-- **OWASP Drone Top 10** — ten risk classes, each with a real example, mitigations, and a link into the taxonomy.
-- **CVE Register** — UAS vulnerabilities with CVSS, CWE, status, and mapping. The maintainer's own CVEs are flagged with ★.
-- **UAS Attack Taxonomy** — a drone-native kill chain with domain-specific technique IDs (`UAS-RF / NAV / NET / FW / PHY`). Enterprise ATT&CK IDs appear only as *informational* cross-references, never as exact mappings.
-- **Detection Signatures** — Suricata / Zeek / YARA content that detects the documented exposures.
+| Page | File | What it holds |
+|------|------|---------------|
+| Home | `index.html` | Hero radar scope, featured research, what-is-inside grid, live NVD feed |
+| Knowledge Base | `knowledge.html` | OWASP Drone Top 10, attack taxonomy, detections |
+| CVE Register | `cves.html` | Searchable register, curated plus NVD auto-ingested |
+| Research | `research.html` | Credited CVE disclosures, methodology, publications |
+| About | `about.html` | Bio, focus areas, skills, experience, contact |
 
-## Architecture (why the numbers can't drift)
+## Architecture (why the numbers never drift)
 
-All content lives as canonical JSON in [`/data`](./data):
+Canonical content lives as versioned JSON in [`/data`](./data):
 
 | File | Contents |
 |------|----------|
 | `meta.json` | Title, version, maintainer, citation |
-| `cves.json` | The CVE register |
+| `profile.json` | About-page bio, skills, experience, contact |
+| `research.json` | Methodology, publications, contributions |
+| `cves.json` | Curated CVE register (your flagship entries) |
+| `cves_auto.json` | NVD auto-ingested CVEs (machine generated) |
 | `owasp.json` | OWASP Drone Top 10 |
-| `attacks.json` | UAS tactics + techniques |
+| `attacks.json` | UAS tactics and techniques |
 | `detections.json` | Detection rules |
 
-`build.py` reads that JSON and renders a **fully prerendered static `index.html`** —
-no in-browser Babel, no runtime `fetch`. That means:
+`build.py` reads that JSON plus `_style.css` and `_script.js` and renders the
+five static pages. There is no in-browser Babel and no runtime fetch, so:
 
-- **Every count on the page is computed from the data at build time** (CVE totals, severity counts, technique counts). They cannot disagree with the records.
-- The full content is in the served HTML, so **search engines and link previews see it** (the previous Babel-in-browser build was invisible to crawlers).
-- The page loads instantly.
+- Every count is computed from the data at build time, so the badges and totals cannot disagree with the records.
+- The full content ships in the HTML, so crawlers and link previews see it.
+- Pages load instantly.
 
 ```bash
-python3 build.py     # regenerates index.html from /data
+python3 build.py     # regenerate all pages from /data
 ```
 
-To add a CVE: edit `data/cves.json`, run `build.py`, commit. The badge, the
-dashboard counts, and the taxonomy chips all update from that one edit.
+To add a CVE by hand, edit `data/cves.json` and run `build.py`. To restyle,
+edit `_style.css` and rebuild.
 
 ## Automation (NVD ingestion)
 
-Drone/UAV CVEs are pulled from the **NVD 2.0 API** and merged into the register:
+`fetch_cves.py` pulls drone and UAV CVEs from the NVD 2.0 API, normalizes each
+(CVSS, CWE, product, references), and writes `data/cves_auto.json`. NVD
+descriptions are stored verbatim and tagged `source: NVD`. `build.py` merges
+curated plus auto records, and **curated entries always win** on an ID
+collision, so your flagship teardowns are never overwritten.
 
-- `fetch_cves.py` sweeps a set of drone keywords (`drone`, `UAV`, `MAVLink`, `DJI`, `PX4`, …), normalizes each CVE (CVSS, CWE, product from CPE, references), and writes `data/cves_auto.json`. NVD descriptions are stored **verbatim** and tagged `source: "NVD"`.
-- `build.py` merges curated + auto records. **Curated entries in `cves.json` always win** on an ID collision, so your flagship teardowns are never overwritten. Auto records render with an `NVD` tag.
-- `.github/workflows/update-cves.yml` runs the fetch + build every 6 hours (and on demand), then commits `cves_auto.json` and `index.html`.
+`.github/workflows/update-cves.yml` runs the fetch plus build every 6 hours and
+on demand. `.github/workflows/build.yml` rebuilds whenever data, the builder,
+or the styles change.
 
-It refreshes on the workflow schedule — it is **not** real-time, and `meta.json` says so.
+It refreshes on the workflow schedule, so it is not real-time, and `meta.json`
+says exactly that.
 
-### Rate limits & the optional free key
+### Optional free NVD key
 
-`fetch_cves.py` works with **no key** (6-second pacing, within NVD's public limit).
-A free key raises the limit; add it as a repo secret named `NVD_API_KEY`
-(**Settings → Secrets and variables → Actions**) and the script picks it up and
-speeds to 2-second pacing. The key lives only in the secret — never in code.
+`fetch_cves.py` works with no key (6-second pacing, within the public limit).
+A free key raises the limit. Add it as a repo secret named `NVD_API_KEY` under
+Settings, Secrets and variables, Actions, and the script speeds to 2-second
+pacing. The key stays in the secret and never touches the code.
 
 ### NVD Terms of Use
 
-The footer carries the required notice — *"This product uses the NVD API but is
-not endorsed or certified by the NVD."* — NVD content is shown verbatim (not
-modified while attributed to NVD), and access stays within the posted rate limits.
-
-```bash
-python3 fetch_cves.py   # refresh data/cves_auto.json from NVD
-python3 build.py        # regenerate index.html from all data
-```
+The footer carries the required notice: "This product uses the NVD API but is
+not endorsed or certified by the NVD." NVD content is shown verbatim, and
+access stays within the posted rate limits.
 
 ## Deploy (Cloudflare Pages)
 
-This is a static site — point Cloudflare Pages at the repo root, build command
-`python3 build.py`, output directory `/` (or leave build empty and commit the
-generated `index.html`).
-
-## Cite
-
-See `meta.json → citation` for the BibTeX entry. Archive a release on Zenodo to
-get a DOI, then drop it into the citation.
+Static site. Point Cloudflare Pages at the repo root, build command
+`python3 build.py`, output directory `/`.
 
 ## License
 
-MIT. Educational use and **authorized testing only.**
+MIT. Educational use and authorized testing only.

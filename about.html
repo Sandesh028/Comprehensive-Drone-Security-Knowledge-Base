@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DroneSecKB · An open UAV cybersecurity reference</title>
-<meta name="description" content="A maintained reference for unmanned-aircraft-system (UAS) security: the OWASP Drone Top 10, a curated CVE register, a UAS-specific attack taxonomy, defensive controls, and shippable detection signatures.">
-<meta property="og:title" content="DroneSecKB · An open UAV cybersecurity reference">
-<meta property="og:description" content="A maintained reference for unmanned-aircraft-system (UAS) security: the OWASP Drone Top 10, a curated CVE register, a UAS-specific attack taxonomy, defensive controls, and shippable detection signatures.">
+<title>About · Sandesh More</title>
+<meta name="description" content="UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.">
+<meta property="og:title" content="About · Sandesh More">
+<meta property="og:description" content="UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -314,77 +314,30 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
 <header class="topbar">
   <a class="brand" href="index.html"><span class="logo" aria-hidden="true">&#9670;</span>DroneSecKB<span class="ver">v2.0.0</span></a>
   <button class="menu-btn" aria-label="Menu" aria-expanded="false">&#9776;</button>
-  <nav class="nav"><a href="index.html" class="active">Home</a><a href="knowledge.html">Knowledge Base</a><a href="cves.html">CVE Register</a><a href="research.html">Research</a><a href="about.html">About</a></nav>
+  <nav class="nav"><a href="index.html">Home</a><a href="knowledge.html">Knowledge Base</a><a href="cves.html">CVE Register</a><a href="research.html">Research</a><a href="about.html" class="active">About</a></nav>
   <a class="ghbtn" href="https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base" target="_blank" rel="noopener">GitHub &#8599;</a>
 </header>
 <main>
-<section class="hero">
-  <div class="hero-grid">
-    <div class="hero-copy reveal">
-      <p class="eyebrow">UNMANNED-AIRCRAFT-SYSTEM SECURITY &middot; MAINTAINED REFERENCE</p>
-      <h1>The airspace has<br>an attack surface.</h1>
-      <p class="lede">A maintained reference for unmanned-aircraft-system (UAS) security: the OWASP Drone Top 10, a curated CVE register, a UAS-specific attack taxonomy, defensive controls, and shippable detection signatures.</p>
-      <div class="hero-stats">
-        <div class="stat"><b data-count="23">0</b><span>CVEs tracked</span></div>
-        <div class="stat"><b data-count="13">0</b><span>UAS techniques</span></div>
-        <div class="stat"><b data-count="10">0</b><span>OWASP risks</span></div>
-        <div class="stat"><b data-count="4">0</b><span>Detection rules</span></div>
-      </div>
-      <p class="own-line">&#9733; Includes <b>2</b> CVEs credited to the maintainer, with teardown detail published nowhere else.</p>
-      <div class="hero-cta"><a class="btn primary" href="knowledge.html">Explore the knowledge base</a><a class="btn ghost" href="research.html">View the research</a></div>
-    </div>
-    <figure class="scope reveal" aria-label="Threat scope: OWASP Drone Top 10 by severity, center is most critical">
-      <svg viewBox="0 0 100 100" role="img">
-      <defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="var(--scope)" stop-opacity=".18"/><stop offset="100%" stop-color="var(--scope)" stop-opacity="0"/></radialGradient></defs>
-      <circle cx="50" cy="50" r="48" class="ring outer"/><circle cx="50" cy="50" r="36" class="ring"/><circle cx="50" cy="50" r="24" class="ring"/><circle cx="50" cy="50" r="12" class="ring"/><line x1="50" y1="2" x2="50" y2="98" class="cross"/><line x1="2" y1="50" x2="98" y2="50" class="cross"/>
-      <circle cx="50" cy="50" r="48" fill="url(#g)"/><g class="sweep"><path d="M50 50 L50 2 A48 48 0 0 1 86 22 Z"/></g><g class="blip sev-critical" style="--d:0.0s" transform="translate(50.0,36.2)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D01</text></g><g class="blip sev-critical" style="--d:0.12s" transform="translate(58.1,38.8)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D02</text></g><g class="blip sev-high" style="--d:0.24s" transform="translate(71.9,42.9)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D03</text></g><g class="blip sev-high" style="--d:0.36s" transform="translate(71.9,57.1)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D04</text></g><g class="blip sev-high" style="--d:0.48s" transform="translate(63.5,68.6)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D05</text></g><g class="blip sev-medium" style="--d:0.6s" transform="translate(50.0,82.2)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D06</text></g><g class="blip sev-medium" style="--d:0.72s" transform="translate(31.1,76.1)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D07</text></g><g class="blip sev-medium" style="--d:0.84s" transform="translate(19.4,60.0)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D08</text></g><g class="blip sev-medium" style="--d:0.96s" transform="translate(19.4,40.0)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D09</text></g><g class="blip sev-low" style="--d:1.08s" transform="translate(26.2,17.3)"><circle r="1.6"/><circle class="ping" r="1.6"/><text x="3" y="1" class="blip-label">D10</text></g></svg><figcaption>OWASP Drone Top 10 &middot; proximity to center encodes severity</figcaption>
-    </figure>
+<section class="phead reveal">
+  <p class="eyebrow">THE RESEARCHER</p>
+  <h1>About Sandesh More</h1>
+  <p class="phead-sub">Open to DevSecOps and security engineering roles</p>
+</section>
+<section class="block pt0">
+  <div class="bio-grid">
+    <div class="bio reveal"><p class="bio-lead">I break unmanned aircraft so they can be built to survive.</p><p>UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.</p></div>
+    <aside class="bio-side reveal">
+      <div class="bio-stat"><b>2</b><span>CVEs credited</span></div>
+      <div class="bio-stat"><b>23</b><span>CVEs catalogued</span></div>
+      <div class="bio-stat"><b>4</b><span>detections shipped</span></div>
+      <div class="contacts"><a class="contact-link" href="https://github.com/Sandesh028" target="_blank" rel="noopener">GitHub &#8599;</a></div>
+    </aside>
   </div>
 </section>
-
-<section class="band reveal">
-  <div class="band-head"><p class="eyebrow">FEATURED RESEARCH</p><h2>Vulnerabilities I found</h2></div>
-  <div class="feat-grid"><a class="feat-cve sev-medium" href="research.html">
-        <div class="feat-top"><span class="cid">CVE-2023-49199</span><span class="own">&#9733; OWN</span></div>
-        <p class="feat-t">Coordinated disclosure, teardown on the research page</p>
-        <span class="feat-link">Read the teardown &#8594;</span></a><a class="feat-cve sev-medium" href="research.html">
-        <div class="feat-top"><span class="cid">CVE-2023-49200</span><span class="own">&#9733; OWN</span></div>
-        <p class="feat-t">Coordinated disclosure, teardown on the research page</p>
-        <span class="feat-link">Read the teardown &#8594;</span></a></div>
-</section>
-
-<section class="band reveal">
-  <div class="band-head"><p class="eyebrow">WHAT IS INSIDE</p><h2>One reference, four surfaces</h2></div>
-  <div class="bento-grid"><a class="bento span2" href="knowledge.html">
-        <div class="bento-n"><b data-count="10">0</b><span>risk classes</span></div>
-        <h3>OWASP Drone Top 10</h3><p>The ten ways UAS get owned, each with a real example and fixes.</p><span class="bento-go">Open &#8594;</span></a><a class="bento " href="knowledge.html#taxonomy">
-        <div class="bento-n"><b data-count="13">0</b><span>techniques</span></div>
-        <h3>Attack Taxonomy</h3><p>A drone-native kill chain with UAS-specific technique IDs.</p><span class="bento-go">Open &#8594;</span></a><a class="bento " href="cves.html">
-        <div class="bento-n"><b data-count="23">0</b><span>records</span></div>
-        <h3>CVE Register</h3><p>A searchable register, auto-fed from the NVD API.</p><span class="bento-go">Open &#8594;</span></a><a class="bento " href="knowledge.html#detections">
-        <div class="bento-n"><b data-count="4">0</b><span>signatures</span></div>
-        <h3>Detections</h3><p>Suricata, Zeek, and YARA content defenders can ship.</p><span class="bento-go">Open &#8594;</span></a></div>
-</section>
-
-<section class="band reveal">
-  <div class="band-head split"><div><p class="eyebrow">LIVE FROM NVD</p><h2>Newest in the register</h2></div><a class="btn ghost sm" href="cves.html">See all 23 &#8594;</a></div>
-  <div class="nvd-list"><a class="nvd-row sev-medium" href="cves.html">
-        <span class="nr-id">CVE-2026-32743</span><span class="sev-pill sev-medium">MEDIUM</span>
-        <span class="nr-prod">dronecode px4 drone autopilot</span></a><a class="nvd-row sev-medium" href="cves.html">
-        <span class="nr-id">CVE-2026-32724</span><span class="sev-pill sev-medium">MEDIUM</span>
-        <span class="nr-prod">dronecode px4 drone autopilot</span></a><a class="nvd-row sev-medium" href="cves.html">
-        <span class="nr-id">CVE-2026-32713</span><span class="sev-pill sev-medium">MEDIUM</span>
-        <span class="nr-prod">dronecode px4 drone autopilot</span></a><a class="nvd-row sev-medium" href="cves.html">
-        <span class="nr-id">CVE-2026-32709</span><span class="sev-pill sev-medium">MEDIUM</span>
-        <span class="nr-prod">dronecode px4 drone autopilot</span></a></div>
-  <p class="muted tiny">Auto-ingested from the National Vulnerability Database on a schedule. This product uses the NVD API but is not endorsed or certified by the NVD.</p>
-</section>
-
-<section class="band about-teaser reveal">
-  <div><p class="eyebrow">THE RESEARCHER</p><h2>I break unmanned aircraft so they can be built to survive.</h2>
-  <p class="lede sm">UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.</p>
-  <a class="btn primary" href="about.html">Get to know me</a></div>
-</section></main>
+<section class="block"><div class="block-head"><p class="eyebrow">WHERE I FOCUS</p><h2>Focus areas</h2></div><div class="focus-grid"><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><path d="M5 12a7 7 0 0 1 7-7M5 12a7 7 0 0 0 7 7M2 12a10 10 0 0 1 10-10M2 12a10 10 0 0 0 10 10" fill="none"/><circle cx="12" cy="12" r="1.6"/></svg></span><h3>RF &amp; Link Security</h3><p>MAVLink, OcuSync, Remote ID, and the unencrypted-by-default reality of drone control links.</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1" fill="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" fill="none"/></svg></span><h3>Firmware &amp; Embedded</h3><p>Debug-port access, firmware extraction, and control-protocol memory safety (DUML and friends).</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2" fill="none"/><circle cx="5" cy="19" r="2" fill="none"/><circle cx="19" cy="19" r="2" fill="none"/><path d="M12 7v4M12 11l-6 6M12 11l6 6" fill="none"/></svg></span><h3>Onboard Network</h3><p>Exposed Telnet/RTSP/HTTP services on the airframe AP, and the auth that should have been there.</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" fill="none"/><path d="M9 12l2 2 4-4" fill="none"/></svg></span><h3>Detection Engineering</h3><p>Turning offensive findings into shippable Suricata, Zeek, and YARA content defenders can deploy.</p></article></div></section>
+<section class="block"><div class="block-head"><p class="eyebrow">TOOLKIT</p><h2>Skills</h2></div><div class="skills-grid"><div class="skillgroup reveal"><h4>Vulnerability Research</h4><div class="chips"><span class="schip">UAS / drone security</span><span class="schip">Firmware reverse engineering</span><span class="schip">Protocol fuzzing</span><span class="schip">CVE disclosure</span></div></div><div class="skillgroup reveal"><h4>Embedded &amp; RF</h4><div class="chips"><span class="schip">JTAG / SWD / UART</span><span class="schip">SDR basics</span><span class="schip">MAVLink</span><span class="schip">Remote ID / Open Drone ID</span></div></div><div class="skillgroup reveal"><h4>Detection &amp; Defense</h4><div class="chips"><span class="schip">Suricata</span><span class="schip">Zeek</span><span class="schip">YARA</span><span class="schip">Threat modeling</span></div></div><div class="skillgroup reveal"><h4>Engineering</h4><div class="chips"><span class="schip">Python</span><span class="schip">GitHub Actions / CI-CD</span><span class="schip">Static site tooling</span><span class="schip">Cloudflare Pages</span></div></div></div></section>
+<section class="block"><div class="block-head"><p class="eyebrow">PATH</p><h2>Experience</h2></div><div class="timeline"><p class="muted">Experience timeline is being finalized.</p></div></section>
+<section class="block"><div class="block-head"><p class="eyebrow">STUDY</p><h2>Education</h2></div><div class="edu-list"><p class="muted">Education details coming soon.</p></div></section></main>
 <footer class="foot">
   <div class="foot-row">
     <span>DroneSecKB v2.0.0 &middot; built 2026-06-12</span>
