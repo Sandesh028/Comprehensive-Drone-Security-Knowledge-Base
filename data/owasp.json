@@ -1,0 +1,102 @@
+[
+  {
+    "id": "D01", "rank": 1, "title": "Insecure Communication", "severity": "critical", "cvss": 9.1,
+    "protocol": "MAVLink / OcuSync / RF downlink",
+    "description": "Control and telemetry links transmitted without confidentiality or integrity, allowing interception, modification, or injection of commands and video.",
+    "impact": "Loss of control, mission-data interception, command injection.",
+    "realExample": "MAVLink sends unencrypted messages by default; DJI DroneID broadcasts unencrypted pilot location (NDSS 2023).",
+    "mitigations": ["MAVLink 2.0 message signing", "AES-256 / ChaCha20 link encryption", "DTLS tunneling", "Encrypted RF links (e.g. OcuSync)"],
+    "taxonomyMapping": ["UAS-RF-002", "UAS-RF-001"],
+    "references": ["NDSS 2023 DroneID"]
+  },
+  {
+    "id": "D02", "rank": 2, "title": "Weak Authentication & Authorization", "severity": "critical", "cvss": 9.8,
+    "protocol": "Wi-Fi / Bluetooth / Telnet",
+    "description": "Default credentials, missing authentication, or exposed debug services that allow unauthorized control of the airframe or its services.",
+    "impact": "Hijacking, unauthorized control, full system compromise.",
+    "realExample": "Unauthenticated Telnet root on consumer UAVs (CVE-2024-6422); Holy Stone Remote ID unauthenticated power-off (CVE-2024-52876).",
+    "mitigations": ["WPA3-SAE", "Certificate-based auth", "X25519 key exchange", "Disable default/debug services in production"],
+    "taxonomyMapping": ["UAS-NET-002", "UAS-NET-001"],
+    "references": ["CVE-2024-6422", "CVE-2024-52876", "CVE-2023-49200"]
+  },
+  {
+    "id": "D03", "rank": 3, "title": "Insecure Firmware & Software", "severity": "high", "cvss": 8.4,
+    "protocol": "JTAG / SWD / ADB / DUML",
+    "description": "Memory-corruption bugs, unsigned updates, and exposed debug interfaces enabling persistent compromise.",
+    "impact": "Code execution, persistent backdoors, key extraction.",
+    "realExample": "DJI Mavic 3 vtwo_sdk memory corruption via DUML fuzzing (CVE-2023-51454/55/56, NDSS 2023).",
+    "mitigations": ["Secure boot chain", "Signed firmware with rollback protection", "Disable debug ports", "Memory-safe parsing of control protocols"],
+    "taxonomyMapping": ["UAS-FW-002", "UAS-FW-001"],
+    "references": ["CVE-2023-51454", "CVE-2023-51455", "CVE-2023-51456"]
+  },
+  {
+    "id": "D04", "rank": 4, "title": "GPS / GNSS Spoofing", "severity": "high", "cvss": 8.1,
+    "protocol": "GPS L1 / L5",
+    "description": "Civil GNSS signals are unencrypted and weak (~-130 dBm) and can be overpowered to mislead navigation.",
+    "impact": "Capture, mission failure, geofence bypass, delivery theft.",
+    "realExample": "UT Austin demonstrated capture of a civilian UAV via GPS spoofing; consumer airframes remain broadly susceptible.",
+    "mitigations": ["Multi-constellation receivers", "Spoofing-aware RAIM", "Inertial cross-checks", "Signal-authentication GNSS (e.g. Galileo OSNMA)"],
+    "taxonomyMapping": ["UAS-NAV-001", "UAS-NAV-003"],
+    "references": []
+  },
+  {
+    "id": "D05", "rank": 5, "title": "Insufficient Network Security", "severity": "high", "cvss": 7.6,
+    "protocol": "Wi-Fi AP / onboard services",
+    "description": "Onboard network services (FTP, Telnet, RTSP, debug HTTP) exposed without hardening.",
+    "impact": "Service abuse, data theft, pivot to flight controller.",
+    "realExample": "Open RTSP video and Telnet on the airframe AP (see CVE-2024-6422).",
+    "mitigations": ["Close unused ports", "Authenticate every service", "Network segmentation onboard", "Egress filtering"],
+    "taxonomyMapping": ["UAS-NET-002", "UAS-NET-003"],
+    "references": ["CVE-2024-6422"]
+  },
+  {
+    "id": "D06", "rank": 6, "title": "Inadequate Data Protection", "severity": "medium", "cvss": 6.2,
+    "protocol": "Onboard storage / logs / media",
+    "description": "Flight logs, media, and configuration stored or transmitted without encryption.",
+    "impact": "Disclosure of operator location, routes, and captured media.",
+    "realExample": "Recoverable flight logs and media after unauthenticated shell access.",
+    "mitigations": ["Encrypt data at rest", "Strip metadata on export", "Secure-erase on decommission"],
+    "taxonomyMapping": ["UAS-NET-001"],
+    "references": ["CVE-2023-6948"]
+  },
+  {
+    "id": "D07", "rank": 7, "title": "Lack of Secure Update Mechanism", "severity": "medium", "cvss": 6.0,
+    "protocol": "OTA / app-assisted update",
+    "description": "Updates delivered without signature verification or downgrade protection.",
+    "impact": "Malicious or downgraded firmware, persistent compromise.",
+    "realExample": "Firmware downgrade to a vulnerable build to re-enable a patched flaw.",
+    "mitigations": ["Signed updates", "Monotonic version / anti-rollback", "TLS-pinned update channel"],
+    "taxonomyMapping": ["UAS-FW-003"],
+    "references": []
+  },
+  {
+    "id": "D08", "rank": 8, "title": "Insecure Third-Party Components", "severity": "medium", "cvss": 5.8,
+    "protocol": "SDKs / OSS dependencies",
+    "description": "Vulnerable SDKs, libraries, or RF modules inherited into the airframe.",
+    "impact": "Inherited CVEs, supply-chain compromise.",
+    "realExample": "Vulnerable Remote ID modules sourced across vendors (CVE-2024-52876).",
+    "mitigations": ["SBOM for airframe + GCS", "Pin and monitor dependencies", "Vet RF/Remote ID modules"],
+    "taxonomyMapping": ["UAS-FW-001"],
+    "references": ["CVE-2024-52876"]
+  },
+  {
+    "id": "D09", "rank": 9, "title": "Physical & Remote ID Weaknesses", "severity": "medium", "cvss": 5.5,
+    "protocol": "Debug headers / Remote ID broadcast",
+    "description": "Accessible debug headers and spoofable or DoS-able Remote ID broadcasts.",
+    "impact": "Firmware extraction, identity spoofing, Remote ID denial.",
+    "realExample": "Remote ID power-off via BLE (CVE-2024-52876); spoofable Open Drone ID broadcasts.",
+    "mitigations": ["Remove/lock debug headers", "Authenticate Remote ID where feasible", "Tamper-evident enclosures"],
+    "taxonomyMapping": ["UAS-RF-003", "UAS-PHY-001"],
+    "references": ["CVE-2024-52876"]
+  },
+  {
+    "id": "D10", "rank": 10, "title": "Insufficient Logging & Monitoring", "severity": "low", "cvss": 4.0,
+    "protocol": "GCS / fleet telemetry",
+    "description": "No tamper-evident logging of control events, making intrusions and spoofing invisible after the fact.",
+    "impact": "Undetected compromise, no forensic trail.",
+    "realExample": "Spoofing and command injection leave no airframe-side record.",
+    "mitigations": ["Signed flight-event logs", "GCS-side anomaly detection", "Fleet telemetry baselining"],
+    "taxonomyMapping": ["UAS-NAV-002"],
+    "references": []
+  }
+]

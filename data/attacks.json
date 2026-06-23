@@ -1,0 +1,104 @@
+{
+  "schema_note": "UAS-native taxonomy. Technique IDs are domain-specific (UAS-<DOMAIN>-NNN). Enterprise ATT&CK analogs are listed as informational cross-references only — they are NOT claimed as exact mappings, which was the prior error.",
+  "tactics": [
+    { "id": "T1", "phase": 1, "name": "Reconnaissance", "summary": "Locate and fingerprint the airframe, links, and operator." },
+    { "id": "T2", "phase": 2, "name": "Initial Access", "summary": "Reach a control or service surface on the airframe." },
+    { "id": "T3", "phase": 3, "name": "Link Manipulation", "summary": "Degrade, inject into, or hijack the RF/control link." },
+    { "id": "T4", "phase": 4, "name": "Navigation Attack", "summary": "Subvert positioning and guidance." },
+    { "id": "T5", "phase": 5, "name": "Onboard Compromise", "summary": "Execute and persist on flight controller / payload." },
+    { "id": "T6", "phase": 6, "name": "Impact", "summary": "Capture, crash, exfiltrate, or deny the mission." }
+  ],
+  "techniques": [
+    {
+      "id": "UAS-RF-001", "name": "Wi-Fi Key Recovery / Deauth", "domain": "RF", "tacticId": "T3",
+      "severity": "high",
+      "summary": "Recover a weak link key or deauthenticate the operator to take over the control Wi-Fi.",
+      "enterpriseAnalog": "informational: T1557 (AiTM) — not an exact map",
+      "relatedCves": ["CVE-2023-6951"]
+    },
+    {
+      "id": "UAS-RF-002", "name": "MAVLink Injection / Replay", "domain": "RF", "tacticId": "T3",
+      "severity": "critical",
+      "summary": "Inject or replay unsigned MAVLink to issue commands or alter telemetry.",
+      "enterpriseAnalog": "informational: T1565 (Data Manipulation)",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-RF-003", "name": "Remote ID Spoofing / DoS", "domain": "RF", "tacticId": "T6",
+      "severity": "medium",
+      "summary": "Spoof or deny Open Drone ID / Remote ID broadcasts.",
+      "enterpriseAnalog": "informational: T1498 (Network DoS)",
+      "relatedCves": ["CVE-2024-52876"]
+    },
+    {
+      "id": "UAS-NAV-001", "name": "GNSS Spoofing", "domain": "NAV", "tacticId": "T4",
+      "severity": "high",
+      "summary": "Transmit counterfeit GNSS signals to mislead position.",
+      "enterpriseAnalog": "informational: no clean enterprise analog — UAS-specific",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-NAV-002", "name": "GNSS Jamming", "domain": "NAV", "tacticId": "T4",
+      "severity": "medium",
+      "summary": "Overpower GNSS to force failsafe/return-to-home or drift.",
+      "enterpriseAnalog": "informational: T1498",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-NAV-003", "name": "IMU / Sensor Manipulation", "domain": "NAV", "tacticId": "T4",
+      "severity": "high",
+      "summary": "Acoustic or EM interference with inertial sensors to destabilize flight.",
+      "enterpriseAnalog": "informational: no clean enterprise analog — UAS-specific",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-NET-001", "name": "Onboard Service Disclosure", "domain": "NET", "tacticId": "T1",
+      "severity": "medium",
+      "summary": "Enumerate FTP/HTTP/RTSP/debug services on the airframe AP.",
+      "enterpriseAnalog": "informational: T1046 (Network Service Discovery)",
+      "relatedCves": ["CVE-2023-6948"]
+    },
+    {
+      "id": "UAS-NET-002", "name": "Unauthenticated Service Access", "domain": "NET", "tacticId": "T2",
+      "severity": "critical",
+      "summary": "Reach an exposed Telnet/SSH/debug service with no authentication.",
+      "enterpriseAnalog": "informational: T1078 (Valid Accounts) / T1190",
+      "relatedCves": ["CVE-2024-6422", "CVE-2023-49200"]
+    },
+    {
+      "id": "UAS-NET-003", "name": "Onboard Denial of Service", "domain": "NET", "tacticId": "T6",
+      "severity": "medium",
+      "summary": "Crash or hang onboard services to disrupt the mission.",
+      "enterpriseAnalog": "informational: T1499",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-FW-001", "name": "Firmware Extraction", "domain": "FW", "tacticId": "T1",
+      "severity": "medium",
+      "summary": "Dump firmware via debug header or update package for analysis.",
+      "enterpriseAnalog": "informational: T1592 (Gather Victim Host Info)",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-FW-002", "name": "Control-Protocol Memory Corruption", "domain": "FW", "tacticId": "T5",
+      "severity": "high",
+      "summary": "Trigger memory corruption via malformed control-protocol messages (e.g. DUML).",
+      "enterpriseAnalog": "informational: T1203 (Exploitation for Client Execution)",
+      "relatedCves": ["CVE-2023-51454", "CVE-2023-51455", "CVE-2023-51456"]
+    },
+    {
+      "id": "UAS-FW-003", "name": "Firmware Downgrade", "domain": "FW", "tacticId": "T5",
+      "severity": "medium",
+      "summary": "Install an older signed build to re-enable a patched flaw.",
+      "enterpriseAnalog": "informational: T1601 (Modify System Image)",
+      "relatedCves": []
+    },
+    {
+      "id": "UAS-PHY-001", "name": "Debug-Port Access", "domain": "PHY", "tacticId": "T2",
+      "severity": "medium",
+      "summary": "Use accessible JTAG/SWD/UART headers for code execution or key extraction.",
+      "enterpriseAnalog": "informational: T1200 (Hardware Additions)",
+      "relatedCves": []
+    }
+  ]
+}

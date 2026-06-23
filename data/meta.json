@@ -1,0 +1,22 @@
+{
+  "title": "DroneSecKB",
+  "tagline": "An open UAV cybersecurity reference",
+  "description": "A maintained reference for unmanned-aircraft-system (UAS) security: the OWASP Drone Top 10, a curated CVE register, a UAS-specific attack taxonomy, defensive controls, and shippable detection signatures.",
+  "version": "2.0.0",
+  "lastUpdated": "2026-06-12",
+  "site_url": "https://drone-security-kb.smore2022.workers.dev",
+  "repo_url": "https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base",
+  "maintainer": {
+    "name": "Sandesh More",
+    "role": "UAS / embedded security researcher",
+    "portfolio_url": "FILL_ME: https://sandeshmore.me",
+    "orcid": "FILL_ME: 0000-0000-0000-0000",
+    "github": "https://github.com/Sandesh028",
+    "credited_cves": ["CVE-2023-49199", "CVE-2023-49200"]
+  },
+  "data_note": "All figures on this site are computed at build time from the JSON files in /data. They cannot drift from the underlying records.",
+  "pipeline_note": "FILL_ME: Describe what actually ships. If the NVD ingestion runs on a schedule and commits results, say so and link the workflow. If records are currently curated by hand, say that instead. Do not claim real-time ingestion unless the deployed artifact performs it.",
+  "citation": {
+    "bibtex": "@misc{more_dronesecikb_2026,\n  author       = {More, Sandesh},\n  title        = {{DroneSecKB: An Open UAV Cybersecurity Reference}},\n  year         = {2026},\n  howpublished = {\\url{https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base}},\n  note         = {FILL_ME: add Zenodo DOI once archived}\n}"
+  }
+}
