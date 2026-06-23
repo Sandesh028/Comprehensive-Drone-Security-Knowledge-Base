@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>About · Sandesh More</title>
-<meta name="description" content="UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.">
-<meta property="og:title" content="About · Sandesh More">
-<meta property="og:description" content="UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.">
+<title>About · DroneSecKB</title>
+<meta name="description" content="DroneSecKB is an open, data-driven reference for unmanned-aircraft-system security. It brings the OWASP Drone Top 10, a live CVE register, a UAS-native attack taxonomy, and shippable detections together in one place.">
+<meta property="og:title" content="About · DroneSecKB">
+<meta property="og:description" content="DroneSecKB is an open, data-driven reference for unmanned-aircraft-system security. It brings the OWASP Drone Top 10, a live CVE register, a UAS-native attack taxonomy, and shippable detections together in one place.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -231,6 +231,13 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
 .contrib-list li{background:var(--panel);border:1px solid var(--grid);border-left:3px solid var(--scope);border-radius:9px;padding:.8rem 1rem;color:var(--muted);font-size:.9rem}
 
 /* about: bio */
+.about-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:start}
+.about-p{color:var(--muted);max-width:60ch}
+.cols3{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.codeblock pre{background:#060a12;border:1px solid var(--grid);border-radius:10px;padding:1rem;overflow-x:auto;margin:0}
+.codeblock code{font-family:var(--mono);font-size:.72rem;color:#9fb6d4;white-space:pre}
+.maintainer{text-align:left}
+.m-links{display:flex;gap:.8rem;flex-wrap:wrap;margin:1.2rem 0}
 .bio-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:2rem;align-items:start}
 .bio-lead{font-family:var(--disp);font-size:1.4rem;font-weight:600;line-height:1.3;margin:0 0 1rem;color:var(--ink)}
 .bio p{color:var(--muted)}
@@ -295,7 +302,8 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
   .nav a{padding:.7rem .5rem}
   .ghbtn{display:none}
   .hero-grid{grid-template-columns:1fr}.scope{max-width:380px;margin:0 auto;order:-1}
-  .feat-grid,.two-col,.bio-grid,.skills-grid{grid-template-columns:1fr}
+  .feat-grid,.two-col,.bio-grid,.skills-grid,.about-cols{grid-template-columns:1fr}
+  .cols3{grid-template-columns:1fr}
   .nvd-row{grid-template-columns:auto 1fr;row-gap:.3rem}.nr-prod{text-align:left;grid-column:1/-1}
 }
 @media(max-width:480px){
@@ -319,25 +327,58 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
 </header>
 <main>
 <section class="phead reveal">
-  <p class="eyebrow">THE RESEARCHER</p>
-  <h1>About Sandesh More</h1>
-  <p class="phead-sub">Open to DevSecOps and security engineering roles</p>
+  <p class="eyebrow">THE PROJECT</p>
+  <h1>About</h1>
+  <p class="phead-sub">DroneSecKB is an open, data-driven reference for unmanned-aircraft-system security. It brings the OWASP Drone Top 10, a live CVE register, a UAS-native attack taxonomy, and shippable detections together in one place.</p>
 </section>
 <section class="block pt0">
-  <div class="bio-grid">
-    <div class="bio reveal"><p class="bio-lead">I break unmanned aircraft so they can be built to survive.</p><p>UAS and embedded security researcher focused on the parts of a drone that rarely get audited: the RF link, the flight-controller firmware, and the onboard network. Credited on two MITRE CVEs and the maintainer of this reference.</p></div>
+  <div class="about-cols">
+    <div class="reveal">
+      <div class="block-head"><p class="eyebrow">WHY IT EXISTS</p><h2>One place for UAS security</h2></div>
+      <p class="about-p">Most UAV security knowledge is scattered across conference papers, vendor advisories, and blog posts. This project centralizes it, keeps the underlying data versioned and citable, and refreshes the CVE feed automatically so the reference stays current.</p>
+    </div>
     <aside class="bio-side reveal">
-      <div class="bio-stat"><b>2</b><span>CVEs credited</span></div>
       <div class="bio-stat"><b>23</b><span>CVEs catalogued</span></div>
-      <div class="bio-stat"><b>4</b><span>detections shipped</span></div>
-      <div class="contacts"><a class="contact-link" href="https://github.com/Sandesh028" target="_blank" rel="noopener">GitHub &#8599;</a></div>
+      <div class="bio-stat"><b>10</b><span>OWASP risks</span></div>
+      <div class="bio-stat"><b>13</b><span>UAS techniques</span></div>
+      <div class="bio-stat"><b>4</b><span>detection rules</span></div>
     </aside>
   </div>
 </section>
-<section class="block"><div class="block-head"><p class="eyebrow">WHERE I FOCUS</p><h2>Focus areas</h2></div><div class="focus-grid"><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><path d="M5 12a7 7 0 0 1 7-7M5 12a7 7 0 0 0 7 7M2 12a10 10 0 0 1 10-10M2 12a10 10 0 0 0 10 10" fill="none"/><circle cx="12" cy="12" r="1.6"/></svg></span><h3>RF &amp; Link Security</h3><p>MAVLink, OcuSync, Remote ID, and the unencrypted-by-default reality of drone control links.</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1" fill="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" fill="none"/></svg></span><h3>Firmware &amp; Embedded</h3><p>Debug-port access, firmware extraction, and control-protocol memory safety (DUML and friends).</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2" fill="none"/><circle cx="5" cy="19" r="2" fill="none"/><circle cx="19" cy="19" r="2" fill="none"/><path d="M12 7v4M12 11l-6 6M12 11l6 6" fill="none"/></svg></span><h3>Onboard Network</h3><p>Exposed Telnet/RTSP/HTTP services on the airframe AP, and the auth that should have been there.</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" fill="none"/><path d="M9 12l2 2 4-4" fill="none"/></svg></span><h3>Detection Engineering</h3><p>Turning offensive findings into shippable Suricata, Zeek, and YARA content defenders can deploy.</p></article></div></section>
-<section class="block"><div class="block-head"><p class="eyebrow">TOOLKIT</p><h2>Skills</h2></div><div class="skills-grid"><div class="skillgroup reveal"><h4>Vulnerability Research</h4><div class="chips"><span class="schip">UAS / drone security</span><span class="schip">Firmware reverse engineering</span><span class="schip">Protocol fuzzing</span><span class="schip">CVE disclosure</span></div></div><div class="skillgroup reveal"><h4>Embedded &amp; RF</h4><div class="chips"><span class="schip">JTAG / SWD / UART</span><span class="schip">SDR basics</span><span class="schip">MAVLink</span><span class="schip">Remote ID / Open Drone ID</span></div></div><div class="skillgroup reveal"><h4>Detection &amp; Defense</h4><div class="chips"><span class="schip">Suricata</span><span class="schip">Zeek</span><span class="schip">YARA</span><span class="schip">Threat modeling</span></div></div><div class="skillgroup reveal"><h4>Engineering</h4><div class="chips"><span class="schip">Python</span><span class="schip">GitHub Actions / CI-CD</span><span class="schip">Static site tooling</span><span class="schip">Cloudflare Pages</span></div></div></div></section>
-<section class="block"><div class="block-head"><p class="eyebrow">PATH</p><h2>Experience</h2></div><div class="timeline"><p class="muted">Experience timeline is being finalized.</p></div></section>
-<section class="block"><div class="block-head"><p class="eyebrow">STUDY</p><h2>Education</h2></div><div class="edu-list"><p class="muted">Education details coming soon.</p></div></section></main>
+
+<section class="block">
+  <div class="block-head"><p class="eyebrow">HOW IT IS BUILT</p><h2>Data driven, by design</h2></div>
+  <div class="cols3"><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="1" fill="none"/><path d="M9 3v3M15 3v3M9 18v3M15 18v3M3 9h3M3 15h3M18 9h3M18 15h3" fill="none"/></svg></span><h3>Data as the source of truth</h3><p>Every risk, CVE, technique, and detection is a record in versioned JSON under /data.</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><path d="M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z" fill="none"/><path d="M9 12l2 2 4-4" fill="none"/></svg></span><h3>Counts that cannot drift</h3><p>All totals are computed from the data at build time, so the figures always match the records.</p></article><article class="focus reveal"><span class="focus-ic"><svg class="ic" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" fill="currentColor" aria-hidden="true"><circle cx="12" cy="5" r="2" fill="none"/><circle cx="5" cy="19" r="2" fill="none"/><circle cx="19" cy="19" r="2" fill="none"/><path d="M12 7v4M12 11l-6 6M12 11l6 6" fill="none"/></svg></span><h3>Live from NVD</h3><p>Drone and UAV CVEs are auto-ingested from the NVD API on a schedule, then merged into the register.</p></article></div>
+</section>
+
+<section class="block">
+  <div class="about-cols">
+    <div class="reveal">
+      <div class="block-head"><p class="eyebrow">DATA AND SOURCES</p><h2>Where the data comes from</h2></div>
+      <p class="about-p">CVE data is pulled from the National Vulnerability Database and stored verbatim. Risk classes follow the OWASP Drone Top 10. All figures on this site are computed at build time from the JSON files in /data. They cannot drift from the underlying records.</p>
+      <p class="about-p tiny muted">This product uses the NVD API but is not endorsed or certified by the NVD.</p>
+    </div>
+    <div class="reveal">
+      <div class="block-head"><p class="eyebrow">CITE</p><h2>Use it in your work</h2></div>
+      <div class="codeblock"><pre><code>@misc{more_dronesecikb_2026,
+  author       = {More, Sandesh},
+  title        = {{DroneSecKB: An Open UAV Cybersecurity Reference}},
+  year         = {2026},
+  howpublished = {\url{https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base}}
+}</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="block maintainer reveal">
+  <div class="block-head"><p class="eyebrow">MAINTAINER</p><h2>Who keeps this current</h2></div>
+  <p class="about-p">Maintained by Sandesh More, a UAS and embedded security researcher credited on CVE-2023-49199 and CVE-2023-49200. The disclosures and methodology behind those entries are on the Research page.</p>
+  <div class="m-links">
+    <a class="contact-link" href="research.html">See the research &#8594;</a>
+    <a class="contact-link" href="https://github.com/Sandesh028" target="_blank" rel="noopener">GitHub &#8599;</a>
+  </div>
+  <p class="about-p tiny muted">Educational use and authorized testing only.</p>
+</section></main>
 <footer class="foot">
   <div class="foot-row">
     <span>DroneSecKB v2.0.0 &middot; built 2026-06-12</span>

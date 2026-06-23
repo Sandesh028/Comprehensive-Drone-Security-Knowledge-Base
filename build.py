@@ -294,9 +294,9 @@ def home_body():
 </section>
 
 <section class="band about-teaser reveal">
-  <div><p class="eyebrow">THE RESEARCHER</p><h2>{e(fv(profile.get('headline'),'About the maintainer'))}</h2>
-  <p class="lede sm">{e(profile['bio_short'])}</p>
-  <a class="btn primary" href="about.html">Get to know me</a></div>
+  <div><p class="eyebrow">ABOUT THE PROJECT</p><h2>Open, versioned, and citable</h2>
+  <p class="lede sm">{e(profile['summary'])}</p>
+  <a class="btn primary" href="about.html">About the project</a></div>
 </section>"""
 
 
@@ -377,38 +377,52 @@ def research_body():
 
 
 def about_body():
-    foci = "".join(f"""<article class="focus reveal"><span class="focus-ic">{icon(f.get('icon',''))}</span><h3>{e(f['name'])}</h3><p>{e(f['summary'])}</p></article>""" for f in profile["focus_areas"])
-    skills = "".join(f"""<div class="skillgroup reveal"><h4>{e(g['group'])}</h4><div class="chips">{''.join(f'<span class="schip">{e(i)}</span>' for i in g['items'])}</div></div>""" for g in profile["skills"])
-    exp = [x for x in profile.get("experience", []) if not is_fill(x.get("role"))]
-    exp_html = "".join(f"""<div class="tl-item reveal"><div class="tl-dot"></div><div class="tl-body"><div class="tl-top"><span class="tl-role">{e(x['role'])}</span><span class="tl-period">{e(fv(x.get('period'),''))}</span></div><span class="tl-org">{e(fv(x.get('org'),''))}</span><ul>{''.join(f'<li>{e(p)}</li>' for p in x.get('points',[]) if not is_fill(p))}</ul></div></div>""" for x in exp) or '<p class="muted">Experience timeline is being finalized.</p>'
-    edu = [x for x in profile.get("education", []) if not is_fill(x.get("degree"))]
-    edu_html = "".join(f"""<div class="edu reveal"><span class="edu-d">{e(x['degree'])}</span><span class="edu-s">{e(fv(x.get('school'),''))} &middot; {e(fv(x.get('period'),''))}</span></div>""" for x in edu) or '<p class="muted">Education details coming soon.</p>'
-    c = profile["contact"]
-    links = []
-    for label, key, pre in [("Email", "email", "mailto:"), ("GitHub", "github", ""), ("Portfolio", "portfolio", ""), ("LinkedIn", "linkedin", ""), ("ORCID", "orcid", "https://orcid.org/")]:
-        val = c.get(key)
-        if not is_fill(val):
-            href = pre + val
-            links.append(f'<a class="contact-link" href="{e(href)}" target="_blank" rel="noopener">{label} &#8599;</a>')
-    contact_html = "".join(links) or '<p class="muted">Contact links coming soon.</p>'
-    bio = fv(profile.get("bio_long"), profile["bio_short"])
+    builds = "".join(f"""<article class="focus reveal"><span class="focus-ic">{icon(b.get('icon',''))}</span><h3>{e(b['name'])}</h3><p>{e(b['summary'])}</p></article>""" for b in profile["build_points"])
     return f"""
-{page_head("THE RESEARCHER", "About " + e(meta['maintainer']['name']), fv(profile.get('available_for') and ('Open to ' + profile['available_for']), ''))}
+{page_head("THE PROJECT", "About", profile["summary"])}
 <section class="block pt0">
-  <div class="bio-grid">
-    <div class="bio reveal"><p class="bio-lead">{e(fv(profile.get('headline'),''))}</p><p>{e(bio)}</p></div>
+  <div class="about-cols">
+    <div class="reveal">
+      <div class="block-head"><p class="eyebrow">WHY IT EXISTS</p><h2>One place for UAS security</h2></div>
+      <p class="about-p">{e(profile["why"])}</p>
+    </div>
     <aside class="bio-side reveal">
-      <div class="bio-stat"><b>{S['credited']}</b><span>CVEs credited</span></div>
       <div class="bio-stat"><b>{S['cves']}</b><span>CVEs catalogued</span></div>
-      <div class="bio-stat"><b>{S['detections']}</b><span>detections shipped</span></div>
-      <div class="contacts">{contact_html}</div>
+      <div class="bio-stat"><b>{S['owasp']}</b><span>OWASP risks</span></div>
+      <div class="bio-stat"><b>{S['techniques']}</b><span>UAS techniques</span></div>
+      <div class="bio-stat"><b>{S['detections']}</b><span>detection rules</span></div>
     </aside>
   </div>
 </section>
-<section class="block"><div class="block-head"><p class="eyebrow">WHERE I FOCUS</p><h2>Focus areas</h2></div><div class="focus-grid">{foci}</div></section>
-<section class="block"><div class="block-head"><p class="eyebrow">TOOLKIT</p><h2>Skills</h2></div><div class="skills-grid">{skills}</div></section>
-<section class="block"><div class="block-head"><p class="eyebrow">PATH</p><h2>Experience</h2></div><div class="timeline">{exp_html}</div></section>
-<section class="block"><div class="block-head"><p class="eyebrow">STUDY</p><h2>Education</h2></div><div class="edu-list">{edu_html}</div></section>"""
+
+<section class="block">
+  <div class="block-head"><p class="eyebrow">HOW IT IS BUILT</p><h2>Data driven, by design</h2></div>
+  <div class="cols3">{builds}</div>
+</section>
+
+<section class="block">
+  <div class="about-cols">
+    <div class="reveal">
+      <div class="block-head"><p class="eyebrow">DATA AND SOURCES</p><h2>Where the data comes from</h2></div>
+      <p class="about-p">CVE data is pulled from the National Vulnerability Database and stored verbatim. Risk classes follow the OWASP Drone Top 10. {e(meta['data_note'])}</p>
+      <p class="about-p tiny muted">This product uses the NVD API but is not endorsed or certified by the NVD.</p>
+    </div>
+    <div class="reveal">
+      <div class="block-head"><p class="eyebrow">CITE</p><h2>Use it in your work</h2></div>
+      <div class="codeblock"><pre><code>{e(meta['citation']['bibtex'])}</code></pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="block maintainer reveal">
+  <div class="block-head"><p class="eyebrow">MAINTAINER</p><h2>Who keeps this current</h2></div>
+  <p class="about-p">{e(profile["maintainer_note"])}</p>
+  <div class="m-links">
+    <a class="contact-link" href="research.html">See the research &#8594;</a>
+    <a class="contact-link" href="{e(fv(profile.get('github'),meta['repo_url']))}" target="_blank" rel="noopener">GitHub &#8599;</a>
+  </div>
+  <p class="about-p tiny muted">Educational use and authorized testing only.</p>
+</section>"""
 
 
 # ================= CSS / JS =================
@@ -421,7 +435,7 @@ pages = {
     "knowledge.html": page(f"Knowledge Base \u00b7 {meta['title']}", "OWASP Drone Top 10, UAS attack taxonomy, and shippable detection signatures.", "knowledge.html", knowledge_body()),
     "cves.html": page(f"CVE Register \u00b7 {meta['title']}", "Searchable UAS CVE register, auto-fed from the NVD API.", "cves.html", cves_body()),
     "research.html": page(f"Research \u00b7 {meta['title']}", "Credited CVE disclosures and UAS security research.", "research.html", research_body()),
-    "about.html": page(f"About \u00b7 {meta['maintainer']['name']}", profile["bio_short"], "about.html", about_body()),
+    "about.html": page(f"About \u00b7 {meta['title']}", profile["summary"], "about.html", about_body()),
 }
 for name, content in pages.items():
     (ROOT / name).write_text(content)
