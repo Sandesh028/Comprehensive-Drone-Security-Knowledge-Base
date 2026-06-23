@@ -150,6 +150,9 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
 .cve-head{display:flex;justify-content:space-between;align-items:center}
 .cve .own{font-family:var(--mono);font-size:.58rem;color:var(--scope);border:1px solid var(--scope);
   padding:.1rem .35rem;border-radius:4px;vertical-align:middle;margin-left:.3rem}
+.nvdtag{font-family:var(--mono);font-size:.56rem;color:var(--low);border:1px solid var(--low);
+  padding:.08rem .3rem;border-radius:4px;vertical-align:middle;margin-left:.3rem;letter-spacing:.06em}
+.nvd-attr{color:var(--faint);font-style:italic;width:100%;border-top:1px solid var(--grid);padding-top:.7rem;margin-top:.3rem}
 .cve[data-fill="1"]{box-shadow:inset 0 0 0 1px rgba(52,229,196,.35)}
 .cve-title{font-size:.9rem;color:var(--ink);margin:.35rem 0 .7rem}
 .cve-meta{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .9rem;margin:0 0 .7rem}
@@ -252,7 +255,7 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
       <h1>The airspace has<br>an attack surface.</h1>
       <p class="lede">A maintained reference for unmanned-aircraft-system (UAS) security: the OWASP Drone Top 10, a curated CVE register, a UAS-specific attack taxonomy, defensive controls, and shippable detection signatures.</p>
       <div class="hero-stats">
-        <div class="stat"><b data-count="9">0</b><span>CVEs tracked</span></div>
+        <div class="stat"><b data-count="23">0</b><span>CVEs tracked</span></div>
         <div class="stat"><b data-count="13">0</b><span>UAS techniques</span></div>
         <div class="stat"><b data-count="10">0</b><span>OWASP risks</span></div>
         <div class="stat"><b data-count="4">0</b><span>Detection rules</span></div>
@@ -467,9 +470,9 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
 <!-- CVES -->
 <section id="cves" class="block">
   <div class="block-head">
-    <p class="eyebrow">9 RECORDS · 1 CRITICAL · 2 HIGH</p>
+    <p class="eyebrow">23 RECORDS · 5 CRITICAL · 4 HIGH · 14 VIA NVD</p>
     <h2>CVE Register</h2>
-    <p class="sub">Curated UAS vulnerabilities with CVSS, CWE, and mapping. ★ marks entries credited to the maintainer.</p>
+    <p class="sub">Curated UAS vulnerabilities with CVSS, CWE, and mapping. ★ marks entries credited to the maintainer; <span class="nvdtag">NVD</span> marks records auto-ingested from the National Vulnerability Database.</p>
     <div class="cve-controls">
       <input id="cve-search" type="search" placeholder="Search CVE, product, vendor…" aria-label="Search CVEs">
       <div class="filters" data-target="cve">
@@ -497,6 +500,79 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
       </dl>
       <p class="cve-desc">An unauthenticated remote attacker on the drone&#x27;s Wi-Fi can reach an open Telnet service on port 23 that drops to a BusyBox root shell, allowing arbitrary read, modification, and process control on the airframe.</p>
       <div class="cve-foot"><span class="by">Third party</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-6422" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-critical"
+      data-sev="critical" data-q="cve-2026-1579 the mavlink communication protocol does not require cryptographic 
+authentication by defau… px4 autopilot">
+      <div class="cve-head">
+        <h3>CVE-2026-1579 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-critical">CRITICAL</span>
+      </div>
+      <p class="cve-title">The MAVLink communication protocol does not require cryptographic 
+authentication by defau…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.3</dd></div>
+        <div><dt>CWE</dt><dd>CWE-306</dd></div>
+        <div><dt>PRODUCT</dt><dd>px4 autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">The MAVLink communication protocol does not require cryptographic 
+authentication by default. When MAVLink 2.0 message signing is not 
+enabled, any message -- including SERIAL_CONTROL, which provides 
+interactive shell access -- can be sent by an unauthenticated party with
+ access to the MAVLink interface. PX4 provides MAVLink 2.0 message 
+signing as the cryptographic authentication mechanism for all MAVLink 
+communication. When signing is enabled, unsigned messages are rejected 
+at the protocol level.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-1579" target="_blank" rel="noopener">ref</a><a href="https://docs.px4.io/main/en/mavlink/message_signing" target="_blank" rel="noopener">ref</a><a href="https://docs.px4.io/main/en/mavlink/security_hardening" target="_blank" rel="noopener">ref</a><a href="https://github.com/cisagov/CSAF/blob/develop/csaf_files/OT/white/2026/icsa-26-090-02.json" target="_blank" rel="noopener">ref</a><a href="https://www.cisa.gov/news-events/ics-advisories/icsa-26-090-02" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-critical"
+      data-sev="critical" data-q="cve-2025-41108 the communication protocol implemented in ghost robotics vision 60 v0.27.2 could allow an … ghostrobotics vision 60 firmware">
+      <div class="cve-head">
+        <h3>CVE-2025-41108 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-critical">CRITICAL</span>
+      </div>
+      <p class="cve-title">The communication protocol implemented in Ghost Robotics Vision 60 v0.27.2 could allow an …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.2</dd></div>
+        <div><dt>CWE</dt><dd>CWE-287</dd></div>
+        <div><dt>PRODUCT</dt><dd>ghostrobotics vision 60 firmware</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">The communication protocol implemented in Ghost Robotics Vision 60 v0.27.2 could allow an attacker to send commands to the robot from an external attack station, impersonating the control station (tablet) and gaining unauthorised full control of the robot. The absence of encryption and authentication mechanisms in the communication protocol allows an attacker to capture legitimate traffic between the robot and the controller, replicate it, and send any valid command to the robot from any attacking computer or device. The communication protocol used in this interface is based on MAVLink, a widely documented protocol, which increases the likelihood of attack. There are two methods for connecting to the robot remotely: Wi-Fi and 4G/LTE.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-41108" target="_blank" rel="noopener">ref</a><a href="https://www.incibe.es/en/incibe-cert/notices/aviso/multiple-vulnerabilities-ghost-robotics-vision-60" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-critical"
+      data-sev="critical" data-q="cve-2020-10283 the micro air vehicle link (mavlink) protocol presents authentication mechanisms on its ve… dronecode micro air vehicle link">
+      <div class="cve-head">
+        <h3>CVE-2020-10283 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-critical">CRITICAL</span>
+      </div>
+      <p class="cve-title">The Micro Air Vehicle Link (MAVLink) protocol presents authentication mechanisms on its ve…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-288</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode micro air vehicle link</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">The Micro Air Vehicle Link (MAVLink) protocol presents authentication mechanisms on its version 2.0 however according to its documentation, in order to maintain backwards compatibility, GCS and autopilot negotiate the version via the AUTOPILOT_VERSION message. Since this negotiation depends on the answer, an attacker may craft packages in a way that hints the autopilot to adopt version 1.0 of MAVLink for the communication. Given the lack of authentication capabilities in such version of MAVLink (refer to CVE-2020-10282), attackers may use this method to bypass authentication capabilities and interact with the autopilot directly.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-10283" target="_blank" rel="noopener">ref</a><a href="https://github.com/aliasrobotics/RVD/issues/3316" target="_blank" rel="noopener">ref</a><a href="https://github.com/aliasrobotics/RVD/issues/3316" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-critical"
+      data-sev="critical" data-q="cve-2020-10282 the micro air vehicle link (mavlink) protocol presents no authentication mechanism on its … dronecode micro air vehicle link">
+      <div class="cve-head">
+        <h3>CVE-2020-10282 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-critical">CRITICAL</span>
+      </div>
+      <p class="cve-title">The Micro Air Vehicle Link (MAVLink) protocol presents no authentication mechanism on its …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>9.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-306</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode micro air vehicle link</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">The Micro Air Vehicle Link (MAVLink) protocol presents no authentication mechanism on its version 1.0 (nor authorization) whichs leads to a variety of attacks including identity spoofing, unauthorized access, PITM attacks and more. According to literature, version 2.0 optionally allows for package signing which mitigates this flaw. Another source mentions that MAVLink 2.0 only provides a simple authentication system based on HMAC. This implies that the flying system overall should add the same symmetric key into all devices of network. If not the case, this may cause a security issue, that if one of the devices and its symmetric key are compromised, the whole authentication system is not reliable.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-10282" target="_blank" rel="noopener">ref</a><a href="https://github.com/rligocki/Diploma_thesis_px4" target="_blank" rel="noopener">ref</a><a href="https://github.com/rligocki/Diploma_thesis_px4" target="_blank" rel="noopener">ref</a></span></div>
     </article>
     <article class="card cve sev-high"
       data-sev="high" data-q="cve-2024-52876 holy stone remote id module — unauthenticated remote power-off holy stone remote id module hsrid01">
@@ -529,6 +605,38 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
       </dl>
       <p class="cve-desc">Memory corruption in the vtwo_sdk service reachable over the DUML protocol, one of a cluster of issues surfaced by protocol fuzzing of DJI airframes.</p>
       <div class="cve-foot"><span class="by">NDSS 2023 / DUML fuzzing</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-51454" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-high"
+      data-sev="high" data-q="cve-2024-33844 the &#x27;control&#x27; in parrot anafi usa firmware 1.10.4 does not check the mav_mission_type(0, 1… parrot anafi firmware">
+      <div class="cve-head">
+        <h3>CVE-2024-33844 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-high">HIGH</span>
+      </div>
+      <p class="cve-title">The &#x27;control&#x27; in Parrot ANAFI USA firmware 1.10.4 does not check the MAV_MISSION_TYPE(0, 1…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>7.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-404</dd></div>
+        <div><dt>PRODUCT</dt><dd>parrot anafi firmware</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">The &#x27;control&#x27; in Parrot ANAFI USA firmware 1.10.4 does not check the MAV_MISSION_TYPE(0, 1, 2, 255), which allows attacker to cut off the connection between a controller and the drone by sending MAVLink MISSION_COUNT command with a wrong MAV_MISSION_TYPE.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-33844" target="_blank" rel="noopener">ref</a><a href="http://anafi.com" target="_blank" rel="noopener">ref</a><a href="http://nvd-cwe-other.com" target="_blank" rel="noopener">ref</a><a href="https://forum.developer.parrot.com/t/cve-2024-33844-bugs-in-anafi-thermal-usa-firmware/22501" target="_blank" rel="noopener">ref</a><a href="https://forum.developer.parrot.com/t/cve-2024-33844-bugs-in-anafi-thermal-usa-firmware/22501/1" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-high"
+      data-sev="high" data-q="cve-2020-10281 this vulnerability applies to the micro air vehicle link (mavlink) protocol and allows a r… dronecode micro air vehicle link">
+      <div class="cve-head">
+        <h3>CVE-2020-10281 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-high">HIGH</span>
+      </div>
+      <p class="cve-title">This vulnerability applies to the Micro Air Vehicle Link (MAVLink) protocol and allows a r…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>7.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-319</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode micro air vehicle link</dd></div>
+        <div><dt>STATUS</dt><dd>Modified</dd></div>
+      </dl>
+      <p class="cve-desc">This vulnerability applies to the Micro Air Vehicle Link (MAVLink) protocol and allows a remote attacker to gain access to sensitive information provided it has access to the communication medium. MAVLink is a header-based protocol that does not perform encryption to improve transfer (and reception speed) and efficiency by design. The increasing popularity of the protocol (used accross different autopilots) has led to its use in wired and wireless mediums through insecure communication channels exposing sensitive information to a remote attacker with ability to intercept network traffic.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2020-10281" target="_blank" rel="noopener">ref</a><a href="https://docs.google.com/document/d/1XtbD0ORNkhZ8eKrsbSIZNLyg9sFRXMXbsR2mp37KbIg/edit" target="_blank" rel="noopener">ref</a><a href="https://docs.google.com/document/d/1XtbD0ORNkhZ8eKrsbSIZNLyg9sFRXMXbsR2mp37KbIg/edit" target="_blank" rel="noopener">ref</a></span></div>
     </article>
     <article class="card cve sev-medium"
       data-sev="medium" data-q="cve-2023-6951 dji mavic 3 — weak quicktransfer wi-fi key generation dji mavic 3 series (quicktransfer mode)">
@@ -578,6 +686,118 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
       <p class="cve-desc">A third DUML-reachable memory-corruption path in vtwo_sdk.</p>
       <div class="cve-foot"><span class="by">NDSS 2023 / DUML fuzzing</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-51456" target="_blank" rel="noopener">ref</a></span></div>
     </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2026-32743 px4 is an open-source autopilot stack for drones and unmanned vehicles. versions 1.17.0-rc… dronecode px4 drone autopilot">
+      <div class="cve-head">
+        <h3>CVE-2026-32743 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">PX4 is an open-source autopilot stack for drones and unmanned vehicles. Versions 1.17.0-rc…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-121</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 is an open-source autopilot stack for drones and unmanned vehicles. Versions 1.17.0-rc2 and below are vulnerable to Stack-based Buffer Overflow through the MavlinkLogHandler, and are triggered via MAVLink log request. The LogEntry.filepath buffer is 60 bytes, but the sscanf function parses paths from the log list file with no width specifier, allowing a path longer than 60 characters to overflow the buffer. An attacker with MAVLink link access can trigger this by first creating deeply nested directories via MAVLink FTP, then requesting the log list. The flight controller MAVLink task crashes, losing telemetry and command capability and causing DoS. This issue has been fixed in this commit: https://github.com/PX4/PX4-Autopilot/commit/616b25a280e229c24d5cf12a03dbf248df89c474.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32743" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/commit/616b25a280e229c24d5cf12a03dbf248df89c474" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-97c4-68r9-96p5" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2026-32724 px4 autopilot is a flight control solution for drones. prior to 1.17.0-rc1, a heap-use-aft… dronecode px4 drone autopilot">
+      <div class="cve-head">
+        <h3>CVE-2026-32724 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc1, a heap-use-aft…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>5.3</dd></div>
+        <div><dt>CWE</dt><dd>CWE-416</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc1, a heap-use-after-free is detected in the MavlinkShell::available() function. The issue is caused by a race condition between the MAVLink receiver thread (which handles shell creation/destruction) and the telemetry sender thread (which polls the shell for available output). The issue is remotely triggerable via MAVLink SERIAL_CONTROL messages (ID 126), which can be sent by an external ground station or automated script. This vulnerability is fixed in 1.17.0-rc1.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32724" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-j5w2-w79c-mqrw" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2026-32713 px4 autopilot is a flight control solution for drones. prior to 1.17.0-rc2, a logic error … dronecode px4 drone autopilot">
+      <div class="cve-head">
+        <h3>CVE-2026-32713 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, A logic error …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>4.3</dd></div>
+        <div><dt>CWE</dt><dd>CWE-670</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, A logic error in the PX4 Autopilot MAVLink FTP session validation uses incorrect boolean logic (&amp;&amp; instead of ||), allowing BurstReadFile and WriteFile operations to proceed with invalid sessions or closed file descriptors. This enables an unauthenticated attacker to put the FTP subsystem into an inconsistent state, trigger operations on invalid file descriptors, and bypass session isolation checks. This vulnerability is fixed in 1.17.0-rc2.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32713" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-pp2c-jr5g-6f2m" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2026-32709 px4 autopilot is a flight control solution for drones. prior to 1.17.0-rc2, an unauthentic… dronecode px4 drone autopilot">
+      <div class="cve-head">
+        <h3>CVE-2026-32709 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, An unauthentic…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>5.4</dd></div>
+        <div><dt>CWE</dt><dd>CWE-22</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">PX4 autopilot is a flight control solution for drones. Prior to 1.17.0-rc2, An unauthenticated path traversal vulnerability in the PX4 Autopilot MAVLink FTP implementation allows any MAVLink peer to read, write, create, delete, and rename arbitrary files on the flight controller filesystem without authentication. On NuttX targets, the FTP root directory is an empty string, meaning attacker-supplied paths are passed directly to filesystem syscalls with no prefix or sanitization for read operations. On POSIX targets (Linux companion computers, SITL), the write-path validation function unconditionally returns true, providing no protection. A TOCTOU race condition in the write validation on NuttX further allows bypassing the only existing guard. This vulnerability is fixed in 1.17.0-rc2.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-32709" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/security/advisories/GHSA-fh32-qxj9-x32f" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2025-5640 a vulnerability was found in px4-autopilot 1.12.3. it has been classified as problematic. … see nvd">
+      <div class="cve-head">
+        <h3>CVE-2025-5640 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">A vulnerability was found in PX4-Autopilot 1.12.3. It has been classified as problematic. …</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>4.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-119</dd></div>
+        <div><dt>PRODUCT</dt><dd>See NVD</dd></div>
+        <div><dt>STATUS</dt><dd>Deferred</dd></div>
+      </dl>
+      <p class="cve-desc">A vulnerability was found in PX4-Autopilot 1.12.3. It has been classified as problematic. This affects the function MavlinkReceiver::handle_message_trajectory_representation_waypoints of the file mavlink_receiver.cpp of the component TRAJECTORY_REPRESENTATION_WAYPOINTS Message Handler. The manipulation leads to stack-based buffer overflow. Local access is required to approach this attack. The exploit has been disclosed to the public and may be used.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-5640" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/24915" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/24915#issue-3091040552" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?ctiid.311127" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?id.311127" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2025-15150 a vulnerability was found in px4 px4-autopilot up to 1.16.0. affected by this issue is the… dronecode px4 drone autopilot">
+      <div class="cve-head">
+        <h3>CVE-2025-15150 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">A vulnerability was found in PX4 PX4-Autopilot up to 1.16.0. Affected by this issue is the…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>4.8</dd></div>
+        <div><dt>CWE</dt><dd>CWE-119</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">A vulnerability was found in PX4 PX4-Autopilot up to 1.16.0. Affected by this issue is the function MavlinkLogHandler::state_listing/MavlinkLogHandler::log_entry_from_id of the file src/modules/mavlink/mavlink_log_handler.cpp. The manipulation results in stack-based buffer overflow. The attack is only possible with local access. The patch is identified as 338595edd1d235efd885fd5e9f45e7f9dcf4013d. It is best practice to apply a patch to resolve this issue.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-15150" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/26118" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/26124" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/26124/commits/338595edd1d235efd885fd5e9f45e7f9dcf4013d" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?ctiid.338527" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-medium"
+      data-sev="medium" data-q="cve-2024-38951 a buffer overflow in px4-autopilot v1.12.3 allows attackers to cause a denial of service (… dronecode px4 drone autopilot">
+      <div class="cve-head">
+        <h3>CVE-2024-38951 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-medium">MEDIUM</span>
+      </div>
+      <p class="cve-title">A buffer overflow in PX4-Autopilot v1.12.3 allows attackers to cause a Denial of Service (…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>6.5</dd></div>
+        <div><dt>CWE</dt><dd>CWE-120</dd></div>
+        <div><dt>PRODUCT</dt><dd>dronecode px4 drone autopilot</dd></div>
+        <div><dt>STATUS</dt><dd>Analyzed</dd></div>
+      </dl>
+      <p class="cve-desc">A buffer overflow in PX4-Autopilot v1.12.3 allows attackers to cause a Denial of Service (DoS) via a crafted MavLink message.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-38951" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/23251" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/23251" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
     <article class="card cve sev-low"
       data-sev="low" data-q="cve-2023-6948 dji mavic 3 — information disclosure dji mavic 3 series">
       <div class="cve-head">
@@ -593,6 +813,22 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
       </dl>
       <p class="cve-desc">Low-severity information exposure in the Mavic 3 series reported alongside the Nozomi Mavic 3 research.</p>
       <div class="cve-foot"><span class="by">Nozomi Networks</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-6948" target="_blank" rel="noopener">ref</a></span></div>
+    </article>
+    <article class="card cve sev-low"
+      data-sev="low" data-q="cve-2025-9020 a vulnerability was found in px4 px4-autopilot up to 1.15.4. this issue affects the functi… see nvd">
+      <div class="cve-head">
+        <h3>CVE-2025-9020 <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span></h3>
+        <span class="sev-pill sev-low">LOW</span>
+      </div>
+      <p class="cve-title">A vulnerability was found in PX4 PX4-Autopilot up to 1.15.4. This issue affects the functi…</p>
+      <dl class="cve-meta">
+        <div><dt>CVSS</dt><dd>2.0</dd></div>
+        <div><dt>CWE</dt><dd>CWE-119</dd></div>
+        <div><dt>PRODUCT</dt><dd>See NVD</dd></div>
+        <div><dt>STATUS</dt><dd>Deferred</dd></div>
+      </dl>
+      <p class="cve-desc">A vulnerability was found in PX4 PX4-Autopilot up to 1.15.4. This issue affects the function MavlinkReceiver::handle_message_serial_control of the file src/modules/mavlink/mavlink_receiver.cpp of the component Mavlink Shell Closing Handler. The manipulation of the argument _mavlink_shell leads to use after free. An attack has to be approached locally. The complexity of an attack is rather high. The exploitation is known to be difficult. The identifier of the patch is 4395d4f00c49b888f030f5b43e2a779f1fa78708. It is recommended to apply a patch to fix this issue.</p>
+      <div class="cve-foot"><span class="by">NVD</span><span class="refs"><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-9020" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/issues/25046" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/25082" target="_blank" rel="noopener">ref</a><a href="https://github.com/PX4/PX4-Autopilot/pull/25082/commits/4395d4f00c49b888f030f5b43e2a779f1fa78708" target="_blank" rel="noopener">ref</a><a href="https://vuldb.com/?ctiid.320081" target="_blank" rel="noopener">ref</a></span></div>
     </article>
     <article class="card cve sev-na" data-fill="1"
       data-sev="fill_me: critical | high | medium | low" data-q="cve-2023-49199 fill_me: short vuln title, e.g. &#x27;consumer uav — unauthenticated web service information disclosure&#x27; fill_me: affected device/firmware">
@@ -807,7 +1043,7 @@ event odid_basic_id(src: string, count: count) {
         <a href="https://orcid.org/0000-0000-0000-0000" target="_blank" rel="noopener">ORCID ↗</a>
       </p>
       <p class="note">All figures on this site are computed at build time from the JSON files in /data. They cannot drift from the underlying records.</p>
-      <p class="note pipeline"><b>Automation:</b> FILL_ME: Describe what actually ships. If the NVD ingestion runs on a schedule and commits results, say so and link the workflow. If records are currently curated by hand, say that instead. Do not claim real-time ingestion unless the deployed artifact performs it.</p>
+      <p class="note pipeline"><b>Automation:</b> Drone/UAV CVEs are pulled from the NVD 2.0 API by fetch_cves.py on a schedule via GitHub Actions and written to data/cves_auto.json; hand-curated records in cves.json always take precedence. Counts and the rendered page are regenerated by build.py on each update. The register is not real-time — it refreshes on the workflow schedule.</p>
     </div>
     <div class="cite">
       <p class="eyebrow">CITE</p>
@@ -826,6 +1062,7 @@ event odid_basic_id(src: string, count: count) {
 <footer class="foot">
   <span>DroneSecKB v2.0.0 · built 2026-06-12</span>
   <span>Data: <a href="https://github.com/Sandesh028/Comprehensive-Drone-Security-Knowledge-Base" target="_blank" rel="noopener">/data on GitHub</a> · educational use, authorized testing only</span>
+  <span class="nvd-attr">This product uses the NVD API but is not endorsed or certified by the NVD.</span>
 </footer>
 
 <script>

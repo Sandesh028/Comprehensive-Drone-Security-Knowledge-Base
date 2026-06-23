@@ -25,6 +25,12 @@ def load(name):
 
 meta = load("meta.json")
 cves = load("cves.json")
+# Merge NVD auto-ingested CVEs (if present). Curated entries always win.
+_auto_path = DATA / "cves_auto.json"
+_auto = json.loads(_auto_path.read_text()) if _auto_path.exists() else []
+_curated_ids = {c["id"] for c in cves}
+auto_cves = [a for a in _auto if a["id"] not in _curated_ids]
+cves = cves + auto_cves
 owasp = load("owasp.json")
 attacks = load("attacks.json")
 detections = load("detections.json")
@@ -55,6 +61,7 @@ stats = {
     "tactics": len(attacks["tactics"]),
     "detections": len(detections),
     "credited": len([c for c in cves if c.get("flagship")]),
+    "auto": len([c for c in cves if c.get("auto")]),
     "critical": sev_counts["critical"],
     "high": sev_counts["high"],
 }
@@ -104,6 +111,7 @@ for r in owasp:
 cve_rows = ""
 for c in sorted(cves, key=lambda x: SEV_ORDER.get(str(x.get("severity", "")).lower(), 9)):
     flag = ' <span class="own" title="Discovered by the maintainer">★ OWN</span>' if c.get("flagship") else ""
+    nvd = ' <span class="nvdtag" title="Auto-ingested from the NVD API">NVD</span>' if c.get("auto") else ""
     fill = ' data-fill="1"' if c.get("flagship") else ""
     refs = "".join(
         f'<a href="{e(u)}" target="_blank" rel="noopener">ref</a>'
@@ -113,7 +121,7 @@ for c in sorted(cves, key=lambda x: SEV_ORDER.get(str(x.get("severity", "")).low
     <article class="card cve {sev_class(c.get('severity'))}"{fill}
       data-sev="{e(str(c.get('severity','')).lower())}" data-q="{e((c['id']+' '+str(c.get('title',''))+' '+str(c.get('product',''))).lower())}">
       <div class="cve-head">
-        <h3>{e(c['id'])}{flag}</h3>
+        <h3>{e(c['id'])}{flag}{nvd}</h3>
         <span class="sev-pill {sev_class(c.get('severity'))}">{SEV_LABEL.get(str(c.get('severity','')).lower(),'—')}</span>
       </div>
       <p class="cve-title">{e(c.get('title',''))}</p>
@@ -303,6 +311,9 @@ details summary{font-family:var(--mono);font-size:.72rem;color:var(--scope);curs
 .cve-head{display:flex;justify-content:space-between;align-items:center}
 .cve .own{font-family:var(--mono);font-size:.58rem;color:var(--scope);border:1px solid var(--scope);
   padding:.1rem .35rem;border-radius:4px;vertical-align:middle;margin-left:.3rem}
+.nvdtag{font-family:var(--mono);font-size:.56rem;color:var(--low);border:1px solid var(--low);
+  padding:.08rem .3rem;border-radius:4px;vertical-align:middle;margin-left:.3rem;letter-spacing:.06em}
+.nvd-attr{color:var(--faint);font-style:italic;width:100%;border-top:1px solid var(--grid);padding-top:.7rem;margin-top:.3rem}
 .cve[data-fill="1"]{box-shadow:inset 0 0 0 1px rgba(52,229,196,.35)}
 .cve-title{font-size:.9rem;color:var(--ink);margin:.35rem 0 .7rem}
 .cve-meta{display:grid;grid-template-columns:1fr 1fr;gap:.4rem .9rem;margin:0 0 .7rem}
@@ -537,9 +548,9 @@ PAGE = f"""<!DOCTYPE html>
 <!-- CVES -->
 <section id="cves" class="block">
   <div class="block-head">
-    <p class="eyebrow">{stats['cves']} RECORDS · {stats['critical']} CRITICAL · {stats['high']} HIGH</p>
+    <p class="eyebrow">{stats['cves']} RECORDS · {stats['critical']} CRITICAL · {stats['high']} HIGH{(' · ' + str(stats['auto']) + ' VIA NVD') if stats['auto'] else ''}</p>
     <h2>CVE Register</h2>
-    <p class="sub">Curated UAS vulnerabilities with CVSS, CWE, and mapping. ★ marks entries credited to the maintainer.</p>
+    <p class="sub">Curated UAS vulnerabilities with CVSS, CWE, and mapping. ★ marks entries credited to the maintainer; <span class="nvdtag">NVD</span> marks records auto-ingested from the National Vulnerability Database.</p>
     <div class="cve-controls">
       <input id="cve-search" type="search" placeholder="Search CVE, product, vendor…" aria-label="Search CVEs">
       <div class="filters" data-target="cve">
@@ -603,6 +614,7 @@ PAGE = f"""<!DOCTYPE html>
 <footer class="foot">
   <span>{e(meta['title'])} v{e(meta['version'])} · built {e(meta['lastUpdated'])}</span>
   <span>Data: <a href="{e(meta['repo_url'])}" target="_blank" rel="noopener">/data on GitHub</a> · educational use, authorized testing only</span>
+  <span class="nvd-attr">This product uses the NVD API but is not endorsed or certified by the NVD.</span>
 </footer>
 
 <script>{JS}</script>
